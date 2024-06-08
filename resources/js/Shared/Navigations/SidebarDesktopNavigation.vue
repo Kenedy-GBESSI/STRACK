@@ -18,14 +18,19 @@
                     >
                         <InertiaLink
                             :href="route('dashboard')"
-                            class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold border"
+                            class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
+                            :class="
+                                isUrl('dashboard')
+                                    ? 'border-l-2 border-white  bg-[#268FF2]'
+                                    : ''
+                            "
                         >
                             <FontAwesomeIcon
                                 size="fa-lg"
-                                class="mr-4 flex-shrink-0 h-6 w-6"
+                                class="mr-4 flex-shrink-0 h-6 w-6 text-white group-hover:text-white fa-light fa-chart-pie"
                             />
 
-                            Dashboard
+                            Tableau de bord
                         </InertiaLink>
                     </nav>
                 </div>
@@ -83,6 +88,18 @@ export default {
 
     data() {
         return {};
+    },
+
+    methods: {
+        isUrl(...urls) {
+            let currentUrl = this.$page.url.slice(1);
+
+            if (urls[0] === "") {
+                return currentUrl === "";
+            }
+
+            return urls.filter((url) => currentUrl.startsWith(url)).length;
+        },
     },
 };
 </script>

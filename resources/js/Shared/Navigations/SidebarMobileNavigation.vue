@@ -63,14 +63,20 @@
                         <nav class="mt-5 px-2 space-y-1" aria-label="Sidebar">
                             <InertiaLink
                                 :href="route('dashboard')"
-                                class="group text-white w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md border"
+                                class="group text-white w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md"
+                                :class="
+                                    isUrl('dashboard')
+                                        ? 'border-l-2 border-white  bg-[#268FF2]'
+                                        : ''
+                                "
                                 @click="sidebarOpen = false"
                             >
                                 <FontAwesomeIcon
-                                    size="fa-xl"
-                                    class="mr-4 flex-shrink-0 h-6 w-6"
+                                    size="fa-lg"
+                                    class="mr-4 flex-shrink-0 h-6 w-6 text-white group-hover:text-white fa-light fa-chart-pie"
                                 />
-                                Dashboard
+
+                                Tableau de bord
                             </InertiaLink>
                         </nav>
                     </div>
@@ -163,6 +169,18 @@ export default {
             set(newStatus) {
                 this.$emit("sidebarOpenStatusUpdated", newStatus);
             },
+        },
+    },
+
+    methods: {
+        isUrl(...urls) {
+            let currentUrl = this.$page.url.slice(1);
+
+            if (urls[0] === "") {
+                return currentUrl === "";
+            }
+
+            return urls.filter((url) => currentUrl.startsWith(url)).length;
         },
     },
 };

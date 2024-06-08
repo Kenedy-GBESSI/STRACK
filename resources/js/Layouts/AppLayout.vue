@@ -26,7 +26,7 @@
 
             <div class="relative">
                 <MenuHeading
-                    :index-title="'Étudiants'"
+                    :index-title="getCurrentRouteName"
                     class="h-24 inset-0 z-40"
                 />
                 <main class="relative z-0 overflow-y-auto focus:outline-none">
@@ -45,6 +45,7 @@
 import { defineAsyncComponent, ref } from "vue";
 import SidebarDesktopNavigation from "@/Shared/Navigations/SidebarDesktopNavigation.vue";
 import MenuHeading from "@/Shared/PagesHeading/MenuHeading.vue";
+import useNavigationsData from "@/Composables/navigationsWithChildrenData";
 
 const AlertHandler = defineAsyncComponent({
     loader: () => import("@/Shared/Notifications/AlertHandler.vue"),
@@ -69,9 +70,11 @@ export default {
 
     setup() {
         const sidebarOpen = ref(false);
+        const { navigationsWithChildren } = useNavigationsData();
 
         return {
             sidebarOpen,
+            navigationsWithChildren,
         };
     },
 
@@ -94,6 +97,16 @@ export default {
 
         profilePhotoUrl() {
             return this.$page.props.auth.user.profile_photo_url;
+        },
+
+        getCurrentRouteName() {
+            const currentUrl = this.$page.url.slice(1);
+
+            const matchingNavigation = this.navigationsWithChildren.find(
+                (nav) => currentUrl.startsWith(nav.route),
+            );
+
+            return matchingNavigation ? matchingNavigation.name : null;
         },
     },
 
