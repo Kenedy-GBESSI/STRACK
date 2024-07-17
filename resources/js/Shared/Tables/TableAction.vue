@@ -31,13 +31,13 @@
                     >
                         Mettre à jour
                     </InertiaLink>
-                    <InertiaLink
+                    <button
                         v-if="action === 'destroy' && baseRouteName"
-                        :href="route(`${baseRouteName}.destroy`, resource?.id)"
-                        class="text-sm font-semibold text-[#f23a26]"
+                        @click="destroy(resource)"
+                        class="text-sm font-semibold text-[#f23a26] w-full text-left"
                     >
                         Supprimer
-                    </InertiaLink>
+                    </button>
                 </li>
             </ul>
         </template>
@@ -78,5 +78,11 @@ export default {
             required: false,
         },
     },
+
+    methods: {
+        destroy(resource){
+            this.$inertia.delete(`/${this.baseRouteName}/${resource.id}`);
+        }
+    }
 };
 </script>

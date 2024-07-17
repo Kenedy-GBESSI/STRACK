@@ -62,6 +62,20 @@ class StudentController extends Controller
     }
 
     /**
+     * Show the specified resource.
+     *
+     * @return \Inertia\Response
+     */
+    public function show(Student $student)
+    {
+        return Inertia::render('Students/Show', [
+            'student' => $student,
+            'studyFields' => fn () => StudyField::cases(),
+            'internshipStatus' => fn () => InternshipStatus::cases(),
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @return \Inertia\Response
