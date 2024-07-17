@@ -18,7 +18,9 @@
             <span class="font-bold sm:text-md text-sm">{{
                 statisticData.name
             }}</span>
-            <h1 class="text-[#111827] text-xl font-bold">{{ statisticData.value }}</h1>
+            <span class="text-[#111827] text-xl font-bold">{{
+                statisticData.value
+            }}</span>
         </p>
     </div>
 </template>

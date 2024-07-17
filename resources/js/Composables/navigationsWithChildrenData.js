@@ -2,11 +2,11 @@ export default function useNavigationsData() {
     const navigationsWithChildren = [
         {
             name: "Tableau de bord",
-            route: "dashboard",
+            englishName: "dashboard",
         },
         {
             name: "Étudiants",
-            route: "profile.show",
+            englishName: "students",
         },
     ];
 

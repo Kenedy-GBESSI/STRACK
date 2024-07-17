@@ -103,7 +103,7 @@ export default {
             const currentUrl = this.$page.url.slice(1);
 
             const matchingNavigation = this.navigationsWithChildren.find(
-                (nav) => currentUrl.startsWith(nav.route),
+                (nav) => currentUrl.startsWith(nav.englishName),
             );
 
             return matchingNavigation ? matchingNavigation.name : null;
