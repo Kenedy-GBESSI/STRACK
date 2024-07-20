@@ -13,3 +13,10 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent !important;
+}

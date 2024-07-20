@@ -70,8 +70,6 @@ class StudentController extends Controller
     {
         return Inertia::render('Students/Show', [
             'student' => $student,
-            'studyFields' => fn () => StudyField::cases(),
-            'internshipStatus' => fn () => InternshipStatus::cases(),
         ]);
     }
 

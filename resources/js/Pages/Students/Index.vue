@@ -93,11 +93,75 @@
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                <TableAction
-                                    :actions="actions"
-                                    :resource="student"
-                                    :base-route-name="'students'"
-                                />
+                                <Dropdown :overlay="false" direction="right">
+                                    <template #trigger>
+                                        <button>
+                                            <img
+                                                src="@/Assets/icons/trois_points.svg"
+                                                alt=""
+                                                class="anchor cursor-pointer"
+                                            />
+                                        </button>
+                                    </template>
+
+                                    <template #content>
+                                        <ul class="divide-y divide-gray-300">
+                                            <li class="w-full p-2">
+                                                <InertiaLink
+                                                    :href="
+                                                        route(
+                                                            'students.show',
+                                                            student.id,
+                                                        )
+                                                    "
+                                                    class="text-sm font-semibold text-[#268FF2]"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        size="fa-lg"
+                                                        class="flex-shrink-0 h-4 w-4 fa-light fa-eye"
+                                                    />
+                                                    <span class="pl-2"
+                                                        >Voir détails</span
+                                                    >
+                                                </InertiaLink>
+                                            </li>
+                                            <li class="w-full p-2">
+                                                <InertiaLink
+                                                    :href="
+                                                        route(
+                                                            `students.edit`,
+                                                            student.id,
+                                                        )
+                                                    "
+                                                    class="text-sm font-semibold text-[#268FF2]"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        size="fa-lg"
+                                                        class="flex-shrink-0 h-4 w-4 fa-light fa-pencil"
+                                                    />
+                                                    <span class="pl-2"
+                                                        >Mettre à jour</span
+                                                    >
+                                                </InertiaLink>
+                                            </li>
+                                            <li class="w-full p-2">
+                                                <button
+                                                    title="Supprimer"
+                                                    @click="destroy(student)"
+                                                    class="text-sm font-semibold text-[#f23a26] w-full text-left"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        size="fa-lg"
+                                                        class="flex-shrink-0 h-4 w-4 fa-light fa-trash-can"
+                                                    />
+                                                    <span class="pl-2"
+                                                        >Supprimer</span
+                                                    >
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </template>
+                                </Dropdown>
                             </td>
                         </tr>
                         <tr v-if="students.data.length === 0">
@@ -114,6 +178,16 @@
             <br />
             <Pagination class="justify-end" :links="students.links" />
         </div>
+        <Teleport to="body">
+            <ConfirmationDialog
+                v-if="showModal"
+                :message="dialogBox.message"
+                :title="'Confirmer la suppression'"
+                :show="showModal"
+                @confirm="confirm()"
+                @close="close()"
+            />
+        </Teleport>
     </div>
 </template>
 
@@ -122,12 +196,17 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import SearchRecordsInput from "@/Shared/Forms/SearchRecordsInput.vue";
 import ExportButton from "@/Shared/Forms/ExportButton.vue";
 import TableHead from "@/Shared/Tables/TableHead.vue";
-import TableAction from "@/Shared/Tables/TableAction.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import { Link as InertiaLink } from "@inertiajs/vue3";
 import { defineAsyncComponent } from "vue";
 import { throttle, pickBy } from "lodash";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
+});
+
+const ConfirmationDialog = defineAsyncComponent({
+    loader: () => import("@/Shared/ConfirmationDialog.vue"),
 });
 
 const Pagination = defineAsyncComponent({
@@ -142,7 +221,9 @@ export default {
         ExportButton,
         TableHead,
         Pagination,
-        TableAction,
+        Dropdown,
+        InertiaLink,
+        ConfirmationDialog,
     },
 
     layout: AppLayout,
@@ -171,11 +252,11 @@ export default {
                 "Email",
                 "Statut",
             ],
-            actions: [
-                "show",
-                "update",
-                "destroy",
-            ],
+            selectedStudent: null,
+            showModal: false,
+            dialogBox: {
+                message: "",
+            },
         };
     },
     watch: {
@@ -186,6 +267,27 @@ export default {
                     preserveState: true,
                 });
             }, 150),
+        },
+    },
+
+    methods: {
+        destroy(selectedStudent) {
+            this.selectedStudent = selectedStudent;
+            this.openModal(selectedStudent);
+        },
+
+        openModal(selectedStudent) {
+            this.dialogBox.message = `Êtes-vous sûr de vouloir supprimer l'étudiant "${selectedStudent.last_name} ${selectedStudent.first_name}" ?`;
+            this.showModal = true;
+        },
+
+        confirm() {
+            this.showModal = false;
+            this.$inertia.delete(`/students/${this.selectedStudent.id}`);
+        },
+
+        close() {
+            this.showModal = false;
         },
     },
 };
