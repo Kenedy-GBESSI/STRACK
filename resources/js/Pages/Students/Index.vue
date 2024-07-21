@@ -16,21 +16,74 @@
                             class="flex sm:flex-row flex-col sm:space-x-4 sm:space-y-0 space-x-0 space-y-4 sm:w-2/12 w-full"
                         >
                             <!-- Filtrer -->
-                            <button
-                                class="relative flex items-center justify-center gap-2 h-[50px] sm:w-1/3 w-full text-[#718096] rounded-lg border border-[#718096]"
-                                @click="$emit('downloadToExcel')"
-                            >
-                                <FontAwesomeIcon
-                                    size="fa-lg"
-                                    class="flex-shrink-0 h-5 w-5 fa-light fa-filter"
-                                />
-                                <span class="font-bold text-sm leading-6"
-                                    >Filtrer</span
-                                >
-                            </button>
+                            <FilterButton
+                                class="h-[50px] sm:w-1/3 w-full"
+                                @click="showFilters = !showFilters"
+                            />
 
                             <!-- Télécharger -->
                             <ExportButton />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                v-show="showFilters"
+                class="mb-4 content p-4 border border-[#DADEE3] rounded bg-[#FFFFFF]"
+            >
+                <h6 class="font-medium sm:text-sm text-xs mb-3">Filtres</h6>
+                <div class="grid sm:grid-cols-4 gap-4">
+                    <div
+                        class="relative gap-2 px-3 py-1 w-auto border border-[#DADEE3] rounded-md bg-white"
+                    >
+                        <label class="text-sm"> Filière </label>
+                        <br />
+                        <div class="flex items-center justify-start w-full">
+                            <img
+                                src="@/Assets/icons/flter_icon.svg"
+                                alt=""
+                                class="mr-3"
+                            />
+                            <select
+                                class="outline-none rounded-md font-medium w-full bg-white"
+                                v-model="form.study_field"
+                            >
+                                <option value="">Tous</option>
+                                <option
+                                    v-for="item of studyFields"
+                                    :key="item.value"
+                                    :value="item.value"
+                                >
+                                    {{ item.label }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div
+                        class="relative gap-2 px-3 py-1 w-auto border border-[#DADEE3] rounded-md bg-white"
+                    >
+                        <label class="text-sm"> Status de stage </label>
+                        <br />
+                        <div class="flex items-center justify-start w-full">
+                            <img
+                                src="@/Assets/icons/flter_icon.svg"
+                                alt=""
+                                class="mr-3"
+                            />
+                            <select
+                                class="outline-none rounded-md font-medium w-full bg-white"
+                                v-model="form.internship_status"
+                            >
+                                <option value="">Tous</option>
+                                <option
+                                    v-for="item of internshipStatus"
+                                    :key="item.value"
+                                    :value="item.value"
+                                >
+                                    {{ item.label }}
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -195,6 +248,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SearchRecordsInput from "@/Shared/Forms/SearchRecordsInput.vue";
 import ExportButton from "@/Shared/Forms/ExportButton.vue";
+import FilterButton from "@/Shared/Forms/FilterButton.vue";
 import TableHead from "@/Shared/Tables/TableHead.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import { Link as InertiaLink } from "@inertiajs/vue3";
@@ -223,6 +277,7 @@ export default {
         Pagination,
         Dropdown,
         InertiaLink,
+        FilterButton,
         ConfirmationDialog,
     },
 
@@ -236,12 +291,28 @@ export default {
                 return {};
             },
         },
+
+        studyFields: {
+            type: Array,
+            default() {
+                return [];
+            },
+        },
+
+        internshipStatus: {
+            type: Array,
+            default() {
+                return [];
+            },
+        },
     },
 
     data() {
         return {
             form: {
                 search: this.filters.search,
+                study_field: this.filters.study_field,
+                internship_status: this.filters.internship_status,
             },
 
             tableHeader: [
@@ -253,6 +324,7 @@ export default {
                 "Statut",
             ],
             selectedStudent: null,
+            showFilters: false,
             showModal: false,
             dialogBox: {
                 message: "",

@@ -42,22 +42,29 @@
                 </div>
             </div>
             <div class="sm:w-4/12 w-full sm:mt-0 mt-4 sm:pl-6 pl-0">
-            <div class="w-full p-4 rounded-lg bg-[#fff]">
-                <div class="w-full flex justify-between sm:h-[30px] flex-wrap">
+                <div class="w-full p-4 rounded-lg bg-[#fff]">
                     <div
-                        class="flex items-center border-b border-[#c2c2c22a] sm:w-3/4 w-full"
+                        class="w-full flex justify-between sm:h-[30px] flex-wrap"
                     >
-                        <p class="flex justify-center items-center cursor-pointer text-[#030229]">
-                            Étudiants
-                        </p>
+                        <div
+                            class="flex items-center border-b border-[#c2c2c22a] sm:w-3/4 w-full"
+                        >
+                            <p
+                                class="flex justify-center items-center cursor-pointer text-[#030229]"
+                            >
+                                Étudiants
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex h-[50vh] w-full pt-8">
+                        <div class="w-full h-full">
+                            <Chart
+                                :options="chartOptionsPie"
+                                class="h-full w-full"
+                            />
+                        </div>
                     </div>
                 </div>
-                <div class="flex h-[50vh] w-full pt-8">
-                    <div class="w-full h-full">
-                        <Chart :options="chartOptionsPie" class="h-full w-full" />
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
     </div>

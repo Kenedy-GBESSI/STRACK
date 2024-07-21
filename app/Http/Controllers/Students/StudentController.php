@@ -25,6 +25,8 @@ class StudentController extends Controller
     {
         return Inertia::render('Students/Index', [
             'filters' => fn () => $request->all('search', 'study_field', 'internship_status'),
+            'studyFields' => fn () => StudyField::toMultiselectFormat(),
+            'internshipStatus' => fn () => InternshipStatus::toMultiselectFormat(),
             'students' => fn () => Student::query()
             ->filter(request()->only('search', 'study_field', 'internship_status'))
             ->orderBy('last_name', 'asc')

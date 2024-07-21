@@ -29,4 +29,14 @@ enum InternshipStatus: string
     {
         return self::getLabel($this);
     }
+
+    /**
+     * @return array<int,mixed>
+     */
+    public static function toMultiselectFormat(): array
+    {
+        return array_map(function (self $case) {
+            return ['value' => $case->value, 'label' => self::getLabel($case)];
+        }, self::cases());
+    }
 }

@@ -3,7 +3,9 @@
         <div class="flex flex-col bg-[#FFFFFF]">
             <div class="flex flex-col p-6">
                 <div class="flex flex-col space-y-4">
-                    <div class="flex sm:space-x-6 sm:space-y-0 space-x-1 space-y-4 px-4 flex-wrap sm:items-start items-center">
+                    <div
+                        class="flex sm:space-x-6 sm:space-y-0 space-x-1 space-y-4 px-4 flex-wrap sm:items-start items-center"
+                    >
                         <InertiaLink
                             :href="route('students.index')"
                             class="flex justify-center items-center w-10 h-10 rounded-full bg-[#F4F4F4]"
@@ -47,7 +49,9 @@
                         <li
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
-                            <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
                                 Matricule
                             </p>
                             <p
@@ -55,7 +59,9 @@
                             >
                                 {{ student?.matriculation_number }}
                             </p>
-                            <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
                                 Nom
                             </p>
                             <p
@@ -67,7 +73,9 @@
                         <li
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
-                            <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
                                 Prénom
                             </p>
                             <p
@@ -75,7 +83,9 @@
                             >
                                 {{ student?.first_name }}
                             </p>
-                            <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
                                 Filière
                             </p>
                             <p
@@ -87,7 +97,9 @@
                         <li
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
-                            <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
                                 Date de naissance
                             </p>
                             <p
@@ -95,7 +107,9 @@
                             >
                                 12-05-2002
                             </p>
-                            <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
                                 Email
                             </p>
                             <p
