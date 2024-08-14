@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Student extends Model
+class Institute extends Model
 {
     use HasFactory;
 
@@ -27,22 +27,9 @@ class Student extends Model
         $query->when($filters['search'] ?? null, function ($query, $search) {
             /** @see \App\Providers\MacrosServiceProvider */
             $query->whereLike([
-                'matriculation_number',
-                'user.last_name',
-                'user.first_name',
-                'study_field',
-                'user.email',
-                'internship_status',
+                'institute_name',
+
             ], $search);
-        })->when($filters['study_field'] ?? null, function ($query, $studyField) {
-
-            $query->where('study_field', $studyField);
-
-        })->when($filters['internship_status'] ?? null, function ($query, $internshipStatus) {
-
-            $query->where('internship_status', $internshipStatus);
-
         });
     }
-
 }

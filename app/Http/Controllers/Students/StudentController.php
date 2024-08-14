@@ -28,9 +28,15 @@ class StudentController extends Controller
             'studyFields' => fn () => StudyField::toMultiselectFormat(),
             'internshipStatus' => fn () => InternshipStatus::toMultiselectFormat(),
             'students' => fn () => Student::query()
+            ->with('user')
             ->filter(request()->only('search', 'study_field', 'internship_status'))
-            ->orderBy('last_name', 'asc')
-            ->orderBy('first_name', 'asc')
+            ->join('users', function ($join) {
+                $join->on('students.id', '=', 'users.profile_id')
+                    ->where('users.profile_type', Student::class);
+            })
+            ->orderBy('users.last_name', 'asc')
+            ->orderBy('users.first_name', 'asc')
+            ->select('students.*')
             ->paginate(config('custom.records_per_page'))
             ->withQueryString()
         ]);
@@ -71,7 +77,7 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         return Inertia::render('Students/Show', [
-            'student' => $student,
+            'student' => $student->load('user'),
         ]);
     }
 

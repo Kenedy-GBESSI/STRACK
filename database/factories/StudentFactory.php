@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\InternshipStatus;
 use App\Enums\StudyField;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -28,11 +29,22 @@ class StudentFactory extends Factory
     {
         return [
             'matriculation_number' => fake()->unique()->regexify('[0-9]{8}'),
-            'first_name' => fake()->lastName(),
-            'last_name' => fake()->firstName(),
             'study_field' => fake()->randomElement(StudyField::cases()),
             'internship_status' => fake()->randomElement(InternshipStatus::cases()),
-            'email' => fake()->email(),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Student $student) {
+            User::create([
+                'last_name' => fake()->lastName(),
+                'first_name' => fake()->firstName(),
+                'email' => fake()->unique()->safeEmail(),
+                'password' => bcrypt('password'),
+                'profile_type' => Student::class,
+                'profile_id' => $student->id,
+            ]);
+        });
     }
 }

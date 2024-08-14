@@ -17,8 +17,8 @@
                         </InertiaLink>
                         <div>
                             <h1 class="font-bold text-2xl leading-8">
-                                {{ student?.last_name }}
-                                {{ student?.first_name }}
+                                {{ student?.user?.last_name }}
+                                {{ student?.user?.first_name }}
                             </h1>
                             <p class="font-medium text-[#525252] leading-6">
                                 {{ student?.matriculation_number }}
@@ -67,7 +67,7 @@
                             <p
                                 class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
                             >
-                                {{ student?.last_name }}
+                                {{ student?.user?.last_name }}
                             </p>
                         </li>
                         <li
@@ -81,7 +81,7 @@
                             <p
                                 class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
                             >
-                                {{ student?.first_name }}
+                                {{ student?.user?.first_name }}
                             </p>
                             <p
                                 class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
@@ -115,7 +115,7 @@
                             <p
                                 class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E] overflow-hidden text-ellipsis whitespace-nowrap"
                             >
-                                {{ student?.email }}
+                                {{ student?.user?.email }}
                             </p>
                         </li>
                     </ul>

@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-class Student extends Model
+class Company extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function user()
+    public function user(): MorphOne
     {
         return $this->morphOne(User::class, 'profile', 'profile_type', 'profile_id');
     }
@@ -27,22 +28,11 @@ class Student extends Model
         $query->when($filters['search'] ?? null, function ($query, $search) {
             /** @see \App\Providers\MacrosServiceProvider */
             $query->whereLike([
-                'matriculation_number',
+                'company_name',
                 'user.last_name',
                 'user.first_name',
-                'study_field',
                 'user.email',
-                'internship_status',
             ], $search);
-        })->when($filters['study_field'] ?? null, function ($query, $studyField) {
-
-            $query->where('study_field', $studyField);
-
-        })->when($filters['internship_status'] ?? null, function ($query, $internshipStatus) {
-
-            $query->where('internship_status', $internshipStatus);
-
         });
     }
-
 }
