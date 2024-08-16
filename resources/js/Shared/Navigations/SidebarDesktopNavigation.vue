@@ -59,7 +59,7 @@
                         >
                             <FontAwesomeIcon
                                 size="fa-lg"
-                                class="mr-4 flex-shrink-0 h-6 w-6 text-white group-hover:text-white fa-light fa-users"
+                                class="mr-4 flex-shrink-0 h-6 w-6 text-white group-hover:text-white fa-light fa-building-columns"
                             />
 
                             Entreprises

@@ -153,6 +153,40 @@
                                                     >
                                                 </InertiaLink>
                                             </li>
+                                            <li
+                                                v-if="company.partnership_status !== 'Rejeté'"
+                                                class="w-full p-2">
+                                                <button
+                                                    title="Rejeter"
+                                                    @click="rejectComapany(company)"
+                                                    class="text-sm font-semibold text-[#f23a26] w-full text-left"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        size="fa-lg"
+                                                        class="flex-shrink-0 h-4 w-4 fa-light fa-eject"
+                                                    />
+                                                    <span class="pl-2"
+                                                        >Rejecter</span
+                                                    >
+                                                </button>
+                                            </li>
+                                            <li
+                                                v-if="company.partnership_status !== 'Validé'"
+                                                class="w-full p-2">
+                                                <button
+                                                    title="Valider"
+                                                    @click="validateCompany(company)"
+                                                    class="text-sm font-semibold text-[#268FF2] w-full text-left"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        size="fa-lg"
+                                                        class="flex-shrink-0 h-4 w-4 fa-light fa-check"
+                                                    />
+                                                    <span class="pl-2"
+                                                        >Valider</span
+                                                    >
+                                                </button>
+                                            </li>
                                             <!-- <li class="w-full p-2">
                                                 <InertiaLink
                                                     :href="
@@ -215,6 +249,22 @@
                 @confirm="confirm()"
                 @close="close()"
             />
+            <ConfirmationDialog
+                v-if="showRejectModal"
+                :message="dialogRejectBox.message"
+                :title="'Confirmer le reject'"
+                :show="showRejectModal"
+                @confirm="confirmRejectModal()"
+                @close="closeRejectModal()"
+            />
+            <ConfirmationDialogSuccess
+                v-if="showValidateModal"
+                :message="dialogValidateBox.message"
+                :title="'Confirmer la validation'"
+                :show="showValidateModal"
+                @confirm="confirmValidateModal()"
+                @close="closeValidateModal()"
+            />
         </Teleport>
     </div>
 </template>
@@ -238,6 +288,11 @@ const ConfirmationDialog = defineAsyncComponent({
     loader: () => import("@/Shared/ConfirmationDialog.vue"),
 });
 
+const ConfirmationDialogSuccess = defineAsyncComponent({
+    loader: () => import("@/Shared/ConfirmationDialogSuccess.vue"),
+});
+
+
 const Pagination = defineAsyncComponent({
     loader: () => import("@/Shared/Pagination.vue"),
 });
@@ -254,6 +309,7 @@ export default {
         InertiaLink,
         FilterButton,
         ConfirmationDialog,
+        ConfirmationDialogSuccess,
     },
 
     layout: AppLayout,
@@ -296,6 +352,18 @@ export default {
             dialogBox: {
                 message: "",
             },
+
+            rejectedCompany: null,
+            showRejectModal: false,
+            dialogRejectBox: {
+                message: "",
+            },
+
+            validatedCompany: null,
+            showValidateModal: false,
+            dialogValidateBox: {
+                message: "",
+            },
         };
     },
     watch: {
@@ -315,9 +383,29 @@ export default {
             this.openModal(selectedCompany);
         },
 
+        rejectComapany(company){
+            this.rejectedCompany = company;
+            this.openRejectModal(company);
+        },
+
+        validateCompany(company) {
+            this.validatedCompany = company;
+            this.openValidateModal(company);
+        },
+
         openModal(selectedCompany) {
-            this.dialogBox.message = `Êtes-vous sûr de vouloir supprimer l'entreprise "${selectedCompany?.user?.last_name} ${selectedCompany?.user?.first_name}" ?`;
+            this.dialogBox.message = `Êtes-vous sûr de vouloir supprimer l'entreprise "${selectedCompany?.company_name}" ?`;
             this.showModal = true;
+        },
+
+        openRejectModal(rejectedCompany) {
+            this.dialogRejectBox.message = `Êtes-vous sûr de vouloir rejecter l'entreprise "${rejectedCompany?.company_name}" ?`;
+            this.showRejectModal = true;
+        },
+
+        openValidateModal(validatedCompany) {
+            this.dialogValidateBox.message = `Êtes-vous sûr de vouloir valider l'entreprise "${validatedCompany?.company_name}" ?`;
+            this.showValidateModal = true;
         },
 
         confirm() {
@@ -325,8 +413,26 @@ export default {
             this.$inertia.delete(`/companies/${this.selectedCompany.id}`);
         },
 
+        confirmRejectModal() {
+            this.showRejectModal = false;
+            this.$inertia.post(`/companies/${this.rejectedCompany.id}/reject`);
+        },
+
+        confirmValidateModal() {
+            this.showValidateModal = false;
+            this.$inertia.post(`/companies/${this.validatedCompany.id}/validate`);
+        },
+
         close() {
             this.showModal = false;
+        },
+
+        closeRejectModal() {
+            this.showRejectModal = false;
+        },
+
+        closeValidateModal() {
+            this.showValidateModal = false;
         },
     },
 };

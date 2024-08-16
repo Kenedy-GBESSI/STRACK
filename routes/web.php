@@ -45,5 +45,7 @@ Route::middleware([
     Route::resource('students', StudentController::class)->only('index', 'show');
 
     // Company
-    Route::resource('companies', CompanyController::class)->only('index', 'show', 'update');
+    Route::resource('companies', CompanyController::class)->except('create', 'update', 'store', 'edit');
+    Route::post('/companies/{company}/reject', [CompanyController::class, 'rejectCompany'])->name('companies.reject-company');
+    Route::post('/companies/{company}/validate', [CompanyController::class, 'validateCompany'])->name('companies.validate-company');
 });

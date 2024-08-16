@@ -37,4 +37,48 @@ class CompanyController extends Controller
             ->withQueryString()
         ]);
     }
+
+    /**
+     * Show the specified resource.
+     *
+     * @return \Inertia\Response
+     */
+    public function show(Company $company)
+    {
+        return Inertia::render('Companies/Show', [
+            'company' => $company->load('user'),
+        ]);
+    }
+
+    public function rejectCompany(Company $company)
+    {
+        $company->update([
+            'partnership_status' => PartnershipStatus::REJECTED_PARTNERSHIP->value
+        ]);
+
+        $this->alert("L'entreprise {$company->company_name} est rejectée avec succès !");
+    }
+
+    public function validateCompany(Company $company)
+    {
+        $company->update([
+            'partnership_status' => PartnershipStatus::VALIDATED_PARTNERSHIP->value
+        ]);
+
+        $this->alert("L'entreprise {$company->company_name} est validée avec succès !");
+    }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Company $company)
+    {
+        $company->delete();
+
+        $this->alert('L\'entreprise est supprimée avec succès !');
+
+        return back();
+    }
 }
