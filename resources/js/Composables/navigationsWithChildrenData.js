@@ -8,6 +8,10 @@ export default function useNavigationsData() {
             name: "Étudiants",
             englishName: "students",
         },
+        {
+            name: "Entreprises",
+            englishName: "companies",
+        },
     ];
 
     return { navigationsWithChildren };

@@ -33,6 +33,10 @@ class Company extends Model
                 'user.first_name',
                 'user.email',
             ], $search);
+        })->when($filters['partnership_status'] ?? null, function ($query, $partnershipStatus) {
+
+            $query->where('partnership_status', $partnershipStatus);
+
         });
     }
 }

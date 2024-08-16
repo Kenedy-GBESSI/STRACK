@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Companies\CompanyController;
+use App\Http\Controllers\Companies\CompanyRegisterController;
 use App\Http\Controllers\Students\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +27,9 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/company-register-view', [CompanyRegisterController::class, 'companyRegisterView'])->name('company-register-view');
+Route::post('/company-register', [CompanyRegisterController::class, 'companyRegister'])->name('company-register');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -36,6 +41,9 @@ Route::middleware([
     })->name('dashboard');
 
 
-    // Items
-    Route::resource('students', StudentController::class);
+    // Students
+    Route::resource('students', StudentController::class)->only('index', 'show');
+
+    // Company
+    Route::resource('companies', CompanyController::class)->only('index', 'show', 'update');
 });

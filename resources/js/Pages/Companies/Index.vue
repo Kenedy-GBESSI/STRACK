@@ -37,32 +37,6 @@
                     <div
                         class="relative gap-2 px-3 py-1 w-auto border border-[#DADEE3] rounded-md bg-white"
                     >
-                        <label class="text-sm"> Filière </label>
-                        <br />
-                        <div class="flex items-center justify-start w-full">
-                            <img
-                                src="@/Assets/icons/flter_icon.svg"
-                                alt=""
-                                class="mr-3"
-                            />
-                            <select
-                                class="outline-none rounded-md font-medium w-full bg-white"
-                                v-model="form.study_field"
-                            >
-                                <option value="">Tous</option>
-                                <option
-                                    v-for="item of studyFields"
-                                    :key="item.value"
-                                    :value="item.value"
-                                >
-                                    {{ item.label }}
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div
-                        class="relative gap-2 px-3 py-1 w-auto border border-[#DADEE3] rounded-md bg-white"
-                    >
                         <label class="text-sm"> Status de stage </label>
                         <br />
                         <div class="flex items-center justify-start w-full">
@@ -73,11 +47,11 @@
                             />
                             <select
                                 class="outline-none rounded-md font-medium w-full bg-white"
-                                v-model="form.internship_status"
+                                v-model="form.partnership_status"
                             >
                                 <option value="">Tous</option>
                                 <option
-                                    v-for="item of internshipStatus"
+                                    v-for="item of partnerShipStatus"
                                     :key="item.value"
                                     :value="item.value"
                                 >
@@ -97,34 +71,35 @@
                     />
                     <tbody class="divide-y divide-gray-200">
                         <tr
-                            v-for="student in students.data"
-                            :key="student.id"
+                            v-for="company in companies.data"
+                            :key="company.id"
                             class="bg-white even:bg-gray-50"
                         >
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ student.matriculation_number }}
+                                {{ company.company_name ?? '-' }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ student.user?.last_name }}
+                                {{ company.user?.full_name}}
+                            </td>
+
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                {{ company.address ?? "-" }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ student.user?.first_name }}
+                                {{ company.phone_number ?? "-" }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ student.study_field ?? "-" }}
-                            </td>
-                            <td
-                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
-                            >
-                                {{ student.user?.email }}
+                                {{ company.user?.email }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
@@ -132,15 +107,15 @@
                                 <span
                                     class="flex justify-center items-center w-[110px] h-8 rounded"
                                     :class="
-                                        student.internship_status === 'En stage'
+                                        company.partnership_status === 'Validé'
                                             ? 'bg-[#4b9f0814] text-[#4B9F08]'
-                                            : student.internship_status ===
-                                                'Pas en stage'
+                                            : company.partnership_status ===
+                                                'Rejeté'
                                               ? 'bg-[#f5737314] text-[#F57373]'
                                               : 'bg-[#f8950014] text-[#F89500]'
                                     "
                                 >
-                                    {{ student.internship_status ?? "-" }}</span
+                                    {{ company.partnership_status ?? "-" }}</span
                                 >
                             </td>
                             <td
@@ -163,8 +138,8 @@
                                                 <InertiaLink
                                                     :href="
                                                         route(
-                                                            'students.show',
-                                                            student.id,
+                                                            'companies.show',
+                                                            company.id,
                                                         )
                                                     "
                                                     class="text-sm font-semibold text-[#268FF2]"
@@ -178,12 +153,12 @@
                                                     >
                                                 </InertiaLink>
                                             </li>
-                                            <li class="w-full p-2">
+                                            <!-- <li class="w-full p-2">
                                                 <InertiaLink
                                                     :href="
                                                         route(
-                                                            `students.edit`,
-                                                            student.id,
+                                                            `companies.edit`,
+                                                            company.id,
                                                         )
                                                     "
                                                     class="text-sm font-semibold text-[#268FF2]"
@@ -196,11 +171,11 @@
                                                         >Mettre à jour</span
                                                     >
                                                 </InertiaLink>
-                                            </li>
+                                            </li> -->
                                             <li class="w-full p-2">
                                                 <button
                                                     title="Supprimer"
-                                                    @click="destroy(student)"
+                                                    @click="destroy(company)"
                                                     class="text-sm font-semibold text-[#f23a26] w-full text-left"
                                                 >
                                                     <FontAwesomeIcon
@@ -217,19 +192,19 @@
                                 </Dropdown>
                             </td>
                         </tr>
-                        <tr v-if="students.data.length === 0">
+                        <tr v-if="companies.data.length === 0">
                             <td
                                 class="px-2 py-2 whitespace-nowrap text-center text-sm font-medium"
                                 colspan="8"
                             >
-                                Aucun étudiant trouvé.
+                                Aucune entreprise trouvée.
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <br />
-            <Pagination class="justify-end" :links="students.links" />
+            <Pagination class="justify-end" :links="companies.links" />
         </div>
         <Teleport to="body">
             <ConfirmationDialog
@@ -285,21 +260,14 @@ export default {
 
     props: {
         filters: Object,
-        students: {
+        companies: {
             type: Object,
             default() {
                 return {};
             },
         },
 
-        studyFields: {
-            type: Array,
-            default() {
-                return [];
-            },
-        },
-
-        internshipStatus: {
+        partnerShipStatus: {
             type: Array,
             default() {
                 return [];
@@ -311,19 +279,18 @@ export default {
         return {
             form: {
                 search: this.filters.search,
-                study_field: this.filters.study_field,
-                internship_status: this.filters.internship_status,
+                partnership_status: this.filters.partnership_status,
             },
 
             tableHeader: [
-                "Matricule",
-                "Nom",
-                "Prénom",
-                "Filière",
+                "Nom de l'entreprise",
+                "Promoteur",
+                "Adresse",
+                "Téléphone",
                 "Email",
                 "Statut",
             ],
-            selectedStudent: null,
+            selectedCompany: null,
             showFilters: false,
             showModal: false,
             dialogBox: {
@@ -335,7 +302,7 @@ export default {
         form: {
             deep: true,
             handler: throttle(function () {
-                this.$inertia.get("/students", pickBy(this.form), {
+                this.$inertia.get("/companies", pickBy(this.form), {
                     preserveState: true,
                 });
             }, 150),
@@ -343,19 +310,19 @@ export default {
     },
 
     methods: {
-        destroy(selectedStudent) {
-            this.selectedStudent = selectedStudent;
-            this.openModal(selectedStudent);
+        destroy(selectedCompany) {
+            this.selectedCompany = selectedCompany;
+            this.openModal(selectedCompany);
         },
 
-        openModal(selectedStudent) {
-            this.dialogBox.message = `Êtes-vous sûr de vouloir supprimer l'étudiant "${selectedStudent.last_name} ${selectedStudent.first_name}" ?`;
+        openModal(selectedCompany) {
+            this.dialogBox.message = `Êtes-vous sûr de vouloir supprimer l'entreprise "${selectedCompany?.user?.last_name} ${selectedCompany?.user?.first_name}" ?`;
             this.showModal = true;
         },
 
         confirm() {
             this.showModal = false;
-            this.$inertia.delete(`/students/${this.selectedStudent.id}`);
+            this.$inertia.delete(`/companies/${this.selectedCompany.id}`);
         },
 
         close() {

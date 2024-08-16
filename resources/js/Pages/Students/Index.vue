@@ -178,7 +178,7 @@
                                                     >
                                                 </InertiaLink>
                                             </li>
-                                            <li class="w-full p-2">
+                                            <!-- <li class="w-full p-2">
                                                 <InertiaLink
                                                     :href="
                                                         route(
@@ -196,7 +196,7 @@
                                                         >Mettre à jour</span
                                                     >
                                                 </InertiaLink>
-                                            </li>
+                                            </li> -->
                                             <li class="w-full p-2">
                                                 <button
                                                     title="Supprimer"
