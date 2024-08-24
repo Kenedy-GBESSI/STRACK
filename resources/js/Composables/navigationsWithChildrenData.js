@@ -12,6 +12,10 @@ export default function useNavigationsData() {
             name: "Entreprises",
             englishName: "companies",
         },
+        {
+            name: "Stages",
+            englishName: "intern-ships",
+        },
     ];
 
     return { navigationsWithChildren };
