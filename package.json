@@ -24,6 +24,7 @@
         "@fortawesome/vue-fontawesome": "^3.0.5",
         "@headlessui/vue": "^1.7.19",
         "@heroicons/vue": "^2.1.1",
+        "@vueform/multiselect": "^2.6.9",
         "filepond-plugin-file-encode": "^2.1.14",
         "filepond-plugin-file-validate-size": "^2.2.8",
         "filepond-plugin-file-validate-type": "^1.2.9",

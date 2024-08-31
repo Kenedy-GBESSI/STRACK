@@ -4,6 +4,7 @@ use App\Http\Controllers\Companies\CompanyController;
 use App\Http\Controllers\Companies\CompanyRegisterController;
 use App\Http\Controllers\Files\SystemFilePondController;
 use App\Http\Controllers\InternShips\InternShipController;
+use App\Http\Controllers\Offers\OfferController;
 use App\Http\Controllers\Students\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,9 @@ Route::middleware([
 
     // InternShips
     Route::resource('intern-ships', InternShipController::class);
+
+    // Offers
+    Route::resource('offers', OfferController::class);
 
     // Filepond integration
     Route::get('filepond/api/process', [SystemFilePondController::class, 'show'])->name('filepond.show');

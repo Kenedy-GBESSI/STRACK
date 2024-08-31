@@ -2,40 +2,40 @@
 
 declare(strict_types=1);
 
-namespace App\Services\InternShips;
+namespace App\Services\Offers;
 
 use App\Data\File\FileData;
-use App\Models\InternShip;
+use App\Models\Offer;
 use Illuminate\Support\Facades\Storage;
 use Sopamo\LaravelFilepond\Filepond;
 
 /**
- * Class InternShipService
+ * Class OfferService
  */
-class InternShipService
+class OfferService
 {
-    /**
-     * Save or Update a picture of internShip
+      /**
+     * Save or Update a picture of offer
      *
      * @return void
      */
-    public function saveFile(InternShip $internShip, FileData $fileData, ?string $subStoragePath = null)
+    public function saveFile(Offer $offer, FileData $fileData, ?string $subStoragePath = null)
     {
         if (! is_null($fileData->file_id)) {
             return;
         }
 
-        tap($internShip->file_associated_path, function ($previous) use ($internShip, $fileData, $subStoragePath) {
+        tap($offer->file_associated_path, function ($previous) use ($offer, $fileData, $subStoragePath) {
 
             $filepond = app(Filepond::class);
             $filePondPath = $filepond->getPathFromServerId($fileData->server_id);
             $filePondPath = str_replace('\\', '/', $filePondPath);
             $filePondPathParts = explode('/', $filePondPath);
 
-            $fileName = $internShip->createFileName(end($filePondPathParts));
-            $path = $internShip->createCustomPath($subStoragePath, $fileName);
+            $fileName = $offer->createFileName(end($filePondPathParts));
+            $path = $offer->createCustomPath($subStoragePath, $fileName);
 
-            $internShip->update([
+            $offer->update([
                 'file_associated_path' => $path,
                 'file_associated_name' => $fileName,
                 'file_associated_uuid' => $fileData->server_id,
@@ -43,7 +43,7 @@ class InternShipService
 
             $file = Storage::get($filePondPath);
             if (! empty($file)) {
-                Storage::disk(InternShip::relatedFileDisk())->put($path, $file);
+                Storage::disk(Offer::relatedFileDisk())->put($path, $file);
             }
 
             if ($previous) {
@@ -52,35 +52,35 @@ class InternShipService
         });
     }
 
-    public function getFileData(InternShip $internShip): ?FileData
+    public function getFileData(Offer $offer): ?FileData
     {
-        if (empty($internShip->file_associated_name) || empty($internShip->file_associated_uuid)) {
+        if (empty($offer->file_associated_name) || empty($offer->file_associated_uuid)) {
             return null;
         }
 
         return FileData::from([
-            'file_id' => $internShip->id,
-            'source' => $internShip->file_associated_name,
-            'server_id' => $internShip->file_associated_uuid,
+            'file_id' => $offer->id,
+            'source' => $offer->file_associated_name,
+            'server_id' => $offer->file_associated_uuid,
         ]);
     }
 
-    public function destroyFile(InternShip $internShip): void
+    public function destroyFile(Offer $offer): void
     {
-        $this->destroyFileWithoutUpdateCompany($internShip->file_associated_path);
+        $this->destroyFileWithoutUpdateCompany($offer->file_associated_path);
 
-        $internShip->update([
+        $offer->update([
             'file_associated_path' => null,
             'file_associated_name' => null,
             'file_associated_uuid' => null,
         ]);
 
-        $internShip->ensureLeftEmptyDirectoriesAreDeleted();
+        $offer->ensureLeftEmptyDirectoriesAreDeleted();
     }
 
     public function destroyFileWithoutUpdateCompany(?string $path = null): void
     {
-        $disk = InternShip::relatedFileDisk();
+        $disk = Offer::relatedFileDisk();
 
         if (is_null($path)) {
             return;
@@ -91,15 +91,19 @@ class InternShipService
     /**
      * @return array<string, mixed>
      */
-    public function loadForDisplay(InternShip $internShip)
+    public function loadForDisplay(Offer $offer)
     {
-        $FileData = $this->getFileData($internShip);
+        $offer->loadMissing('internShip');
+        
+        $FileData = $this->getFileData($offer);
 
         return array_merge(
-            $internShip->toArray(),
+            $offer->toArray(),
             [
                 'fileData' => $FileData ? [$FileData] : [],
+                'intern_ship' => $offer->internShip,
             ]
         );
     }
+
 }

@@ -17,7 +17,7 @@
                         >
                             <InertiaLink
                                 class="inline-flex items-center justify-center w-full py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#007AED] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                :href="route('intern-ships.create')"
+                                :href="route('offers.create')"
                             >
                                 <FontAwesomeIcon
                                     size="fa-lg"
@@ -39,31 +39,40 @@
                     />
                     <tbody class="divide-y divide-gray-200">
                         <tr
-                            v-for="internShip in internShips.data"
-                            :key="internShip.id"
+                            v-for="offer in offers.data"
+                            :key="offer.id"
                             class="bg-white even:bg-gray-50"
                         >
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ internShip.title }}
+                                {{ offer?.title }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
                                 {{
-                                    truncateText(internShip.description) ?? "-"
+                                    truncateText(offer?.description) ?? "-"
                                 }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ formatDate(internShip.start_date) ?? "-" }}
+                                {{
+                                    truncateText(offer?.requirements) ?? "-"
+                                }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ formatDate(internShip.end_date) ?? "-" }}
+                                {{
+                                    truncateText(offer?.responsibilities) ?? "-"
+                                }}
+                            </td>
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                {{ offer?.intern_ship?.title ?? "-" }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
@@ -80,13 +89,13 @@
                                     </template>
 
                                     <template #content>
-                                        <ul class="divide-y divide-gray-300">
+                                        <ul class="divide-y divide-gray-300 z-50 relative">
                                             <li class="w-full p-2">
                                                 <InertiaLink
                                                     :href="
                                                         route(
-                                                            'intern-ships.show',
-                                                            internShip.id,
+                                                            'offers.show',
+                                                            offer.id,
                                                         )
                                                     "
                                                     class="text-sm font-semibold text-[#268FF2]"
@@ -104,8 +113,8 @@
                                                 <InertiaLink
                                                     :href="
                                                         route(
-                                                            `intern-ships.edit`,
-                                                            internShip.id,
+                                                            `offers.edit`,
+                                                            offer.id,
                                                         )
                                                     "
                                                     class="text-sm font-semibold text-[#268FF2]"
@@ -124,8 +133,8 @@
                                                     :title="'Créer de nouvelle offre à base de ce stage'"
                                                     :href="
                                                         route(
-                                                            `intern-ships.edit`,
-                                                            internShip.id,
+                                                            `offers.edit`,
+                                                            offer.id,
                                                         )
                                                     "
                                                     class="text-sm font-semibold text-[#268FF2]"
@@ -135,54 +144,29 @@
                                                         class="flex-shrink-0 h-4 w-4 fa-light fa-plus"
                                                     />
                                                     <span class="pl-2"
-                                                        >Nouvelle offre</span
+                                                        >Voir les candidatures</span
                                                     >
                                                 </InertiaLink>
-                                            </li>
-                                            <li class="w-full p-2">
-                                                <button
-                                                    title="Supprimer"
-                                                    @click="destroy(internShip)"
-                                                    class="text-sm font-semibold text-[#f23a26] w-full text-left"
-                                                >
-                                                    <FontAwesomeIcon
-                                                        size="fa-lg"
-                                                        class="flex-shrink-0 h-4 w-4 fa-light fa-trash-can"
-                                                    />
-                                                    <span class="pl-2"
-                                                        >Supprimer</span
-                                                    >
-                                                </button>
                                             </li>
                                         </ul>
                                     </template>
                                 </Dropdown>
                             </td>
                         </tr>
-                        <tr v-if="internShips.data.length === 0">
+                        <tr v-if="offers.data.length === 0">
                             <td
                                 class="px-2 py-2 whitespace-nowrap text-center text-sm font-medium"
                                 colspan="8"
                             >
-                                Aucun stage trouvé.
+                                Aucune offre trouvée.
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <br />
-            <Pagination class="justify-end" :links="internShips.links" />
+            <Pagination class="justify-end" :links="offers.links" />
         </div>
-        <Teleport to="body">
-            <ConfirmationDialog
-                v-if="showModal"
-                :message="dialogBox.message"
-                :title="'Confirmer la suppression'"
-                :show="showModal"
-                @confirm="confirm()"
-                @close="close()"
-            />
-        </Teleport>
     </div>
 </template>
 
@@ -190,7 +174,6 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import SearchRecordsInput from "@/Shared/Forms/SearchRecordsInput.vue";
 import ExportButton from "@/Shared/Forms/ExportButton.vue";
-import useDateUtilities from "@/Composables/dateUtilities.js";
 import useStringUtilities from "@/Composables/stringUtilities.js";
 import TableHead from "@/Shared/Tables/TableHead.vue";
 import Dropdown from "@/Components/Dropdown.vue";
@@ -200,10 +183,6 @@ import { throttle, pickBy } from "lodash";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
-});
-
-const ConfirmationDialog = defineAsyncComponent({
-    loader: () => import("@/Shared/ConfirmationDialog.vue"),
 });
 
 const Pagination = defineAsyncComponent({
@@ -220,7 +199,6 @@ export default {
         Pagination,
         Dropdown,
         InertiaLink,
-        ConfirmationDialog,
         ExportButton,
     },
 
@@ -228,7 +206,7 @@ export default {
 
     props: {
         filters: Object,
-        internShips: {
+        offers: {
             type: Object,
             default() {
                 return {};
@@ -237,10 +215,9 @@ export default {
     },
 
     setup() {
-        const { formatDate } = useDateUtilities();
-        const { isEmptyString, truncateText } = useStringUtilities();
+        const { truncateText } = useStringUtilities();
 
-        return { formatDate, isEmptyString, truncateText };
+        return { truncateText };
     },
 
     data() {
@@ -252,46 +229,20 @@ export default {
             tableHeader: [
                 "Titre",
                 "Description",
-                "Date de démarage",
-                "Date de fin",
+                "Exigences",
+                "Responsabilités",
+                "Stage",
             ],
-            selectedInternShip: null,
-            showFilters: false,
-            showModal: false,
-            dialogBox: {
-                message: "",
-            },
         };
     },
     watch: {
         form: {
             deep: true,
             handler: throttle(function () {
-                this.$inertia.get("/intern-ships", pickBy(this.form), {
+                this.$inertia.get("/offers", pickBy(this.form), {
                     preserveState: true,
                 });
             }, 150),
-        },
-    },
-
-    methods: {
-        destroy(selectedInternShip) {
-            this.selectedInternShip = selectedInternShip;
-            this.openModal(selectedInternShip);
-        },
-
-        openModal(selectedInternShip) {
-            this.dialogBox.message = `Êtes-vous sûr de vouloir supprimer le stage "${selectedInternShip.title}" ?`;
-            this.showModal = true;
-        },
-
-        confirm() {
-            this.showModal = false;
-            this.$inertia.delete(`/intern-ships/${this.selectedInternShip.id}`);
-        },
-
-        close() {
-            this.showModal = false;
         },
     },
 };

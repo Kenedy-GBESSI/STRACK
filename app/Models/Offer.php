@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use App\Services\InternShips\InternShipService;
-use App\Traits\HandleFiles;
+use App\Services\Offers\OfferService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HandleFiles;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class InternShip extends Model
+class Offer extends Model
 {
     use HasFactory;
     use HandleFiles;
 
-    public const RELATED_FILES_SUB_FOLDER = 'intern-ships';
+    public const RELATED_FILES_SUB_FOLDER = 'offers';
 
     protected $guarded = [];
 
@@ -29,25 +30,19 @@ class InternShip extends Model
         return self::RELATED_FILES_SUB_FOLDER;
     }
 
-    /**
-     * @return array<mixed>
-     */
-    public static function toMultiselectFormat()
-    {
-        return self::select('id as value', 'title as label')
-            ->orderBy('title', 'asc')
-            ->get()
-            ->toArray();
-    }
-
      /**
      * The "booted" method of the model.
      */
     protected static function booted(): void
     {
-        static::deleting(function (InternShip $internShip) {
-            (new InternShipService)->destroyFile($internShip);
+        static::deleting(function (Offer $offer) {
+            (new OfferService)->destroyFile($offer);
         });
+    }
+
+    public function internShip(): BelongsTo
+    {
+        return $this->belongsTo(InternShip::class);
     }
 
     /**
@@ -63,8 +58,8 @@ class InternShip extends Model
             $query->whereLike([
                 'title',
                 'description',
-                'start_date',
-                'end_date'
+                'requirements',
+                'responsibilities'
             ], $search);
         });
     }
