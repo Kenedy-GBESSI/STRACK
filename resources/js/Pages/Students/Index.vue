@@ -124,6 +124,11 @@
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
+                                {{ student.academic_year ?? "-" }}
+                            </td>
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
                                 {{ student.user?.email }}
                             </td>
                             <td
@@ -320,6 +325,7 @@ export default {
                 "Nom",
                 "Prénom",
                 "Filière",
+                "Année",
                 "Email",
                 "Statut",
             ],

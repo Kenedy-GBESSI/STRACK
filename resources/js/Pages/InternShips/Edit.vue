@@ -27,7 +27,7 @@
                         <form @submit.prevent="submit">
                             <div class="px-4 py-5 bg-white sm:p-6">
                                 <div class="flex flex-wrap -mr-6">
-                                    <div class="pr-6 pb-4 sm:w-1/3 w-full">
+                                    <div class="pr-6 pb-4 sm:w-1/4 w-full">
                                         <InputLabel
                                             for="title"
                                             value="Titre *"
@@ -50,7 +50,7 @@
                                         name="start_date"
                                         label="Date de démarage *"
                                         :error="form.errors.start_date"
-                                        class="pb-4 pr-6 w-full lg:w-1/3"
+                                        class="pb-4 pr-6 w-full lg:w-1/4"
                                     />
                                     <DatePicker
                                         v-model="form.end_date"
@@ -59,8 +59,37 @@
                                         name="end_date"
                                         label="Date de fin *"
                                         :error="form.errors.end_date"
-                                        class="pb-4 pr-6 w-full lg:w-1/3"
+                                        class="pb-4 pr-6 w-full lg:w-1/4"
                                     />
+                                    <div class="pr-6 pb-4 sm:w-1/4 w-full">
+                                        <InputLabel
+                                            for="academic_year"
+                                            value="Année"
+                                        />
+                                        <Multiselect
+                                            id="academic_year"
+                                            v-model="form.academic_year"
+                                            autocomplete="off"
+                                            :searchable="true"
+                                            :options="academicYears"
+                                            name="academic_year"
+                                            placeholder="Chercher une année"
+                                        >
+                                            <template #noresults>
+                                                <div
+                                                    class="multiselect-no-results"
+                                                >
+                                                    Oops! Aucun élément trouvé.
+                                                </div>
+                                            </template>
+                                        </Multiselect>
+                                        <InputError
+                                            class="mt-2"
+                                            :message="
+                                                form.errors.academic_year
+                                            "
+                                        />
+                                    </div>
                                     <div class="pb-4 pr-6 w-full flex flex-col">
                                         <InputLabel
                                             for="description"
@@ -132,7 +161,7 @@ import DatePicker from "@/Shared/DatePicker.vue";
 import FileManager from "@/Shared/FileManager.vue";
 import PrimaryButton from "@/Shared/PrimaryButton.vue";
 import useStringUtilities from "@/Composables/stringUtilities.js";
-import { v4 as uuidv4 } from "uuid";
+import Multiselect from "@vueform/multiselect";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
@@ -149,6 +178,7 @@ export default {
         Textarea,
         FileManager,
         PrimaryButton,
+        Multiselect,
     },
 
     layout: AppLayout,
@@ -158,6 +188,13 @@ export default {
             type: Object,
             required: true,
         },
+
+        academicYears: {
+            type: Array,
+            default() {
+                return []
+            }
+        }
     },
 
     setup() {
@@ -173,6 +210,7 @@ export default {
                 end_date: this.internShip?.end_date ?? null,
                 title: this.internShip?.title ?? null,
                 description: this.internShip?.description ?? null,
+                academic_year: this.internShip?.academic_year ?? null,
                 fileData: this.internShip?.fileData ?? [],
             }),
         };
@@ -184,7 +222,8 @@ export default {
                 this.form.processing ||
                 this.isEmptyString(this.form.title) ||
                 this.isEmptyString(this.form.start_date) ||
-                this.isEmptyString(this.form.end_date)
+                this.isEmptyString(this.form.end_date) ||
+                this.isEmptyString(this.form.academic_year)
             );
         },
     },

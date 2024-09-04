@@ -9,6 +9,7 @@ use App\Models\InternShip;
 use App\Traits\InteractsWithAlert;
 use Illuminate\Http\Request;
 use App\Data\File\FileData;
+use App\Enums\AcademicYear;
 use App\Services\InternShips\InternShipService;
 use Inertia\Inertia;
 
@@ -27,6 +28,7 @@ class InternShipController extends Controller
             'filters' => fn() => $request->all('search'),
             'internShips' => fn() => InternShip::query()
                 ->filter(request()->only('search'))
+                ->ongoing()
                 ->orderBy('start_date', 'asc')
                 ->orderBy('end_date', 'asc')
                 ->paginate(config('custom.records_per_page'))
@@ -41,7 +43,9 @@ class InternShipController extends Controller
      */
     public function create()
     {
-        return Inertia::render('InternShips/Create');
+        return Inertia::render('InternShips/Create', [
+            'academicYears' => AcademicYear::cases(),
+        ]);
     }
 
     /**
@@ -83,6 +87,7 @@ class InternShipController extends Controller
     {
         return Inertia::render('InternShips/Edit', [
             'internShip' => $internShipService->loadForDisplay($internShip),
+            'academicYears' => AcademicYear::cases(),
         ]);
     }
 

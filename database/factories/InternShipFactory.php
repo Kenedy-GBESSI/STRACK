@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AcademicYear;
 use App\Models\InternShip;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Traits\WithCarbonDateTimeUtilities;
@@ -28,11 +29,20 @@ class InternShipFactory extends Factory
      */
     public function definition(): array
     {
+        $topics = ['Artificial Intelligence', 'Data Science', 'Software Engineering', 'Biotechnology', 'Cybersecurity', 'Business Analytics'];
+        $levels = ['Bachelor', 'Master', 'PhD'];
+        $domains = ['Research', 'Development', 'Internship', 'Thesis'];
+
+        $topic = $this->faker->randomElement($topics);
+        $level = $this->faker->randomElement($levels);
+        $domain = $this->faker->randomElement($domains);
+
         return [
-            'title' => fake()->title(),
+            'title' => $domain . ' in ' . $topic . ' (' . $level . ' Level)',
             'description' => fake()->text(),
             'start_date' => fake()->dateTimeBetween($this->startOfThisMonth(), $this->endOfThisMonth()),
             'end_date' => fake()->dateTimeBetween($this->startOfTheNextMonth(), $this->endOfTheNextMonth()),
+            'academic_year' => fake()->randomElement(AcademicYear::cases()),
         ];
     }
 }

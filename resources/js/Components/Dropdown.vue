@@ -65,7 +65,7 @@ const alignmentClasses = computed(() => {
         >
             <div
                 v-show="open"
-                class="absolute z-50 mt-2 rounded-md shadow-lg"
+                class="fixed z-50 mt-2 rounded-md shadow-lg translate-x-[-25%]"
                 :class="[widthClass, alignmentClasses]"
                 style="display: none"
                 @click="open = false"

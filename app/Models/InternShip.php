@@ -6,6 +6,7 @@ use App\Services\InternShips\InternShipService;
 use App\Traits\HandleFiles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class InternShip extends Model
 {
@@ -34,13 +35,13 @@ class InternShip extends Model
      */
     public static function toMultiselectFormat()
     {
-        return self::select('id as value', 'title as label')
+        return self::ongoing()->select('id as value', 'title as label')
             ->orderBy('title', 'asc')
             ->get()
             ->toArray();
     }
 
-     /**
+    /**
      * The "booted" method of the model.
      */
     protected static function booted(): void
@@ -64,8 +65,23 @@ class InternShip extends Model
                 'title',
                 'description',
                 'start_date',
-                'end_date'
+                'end_date',
+                'academic_year',
             ], $search);
         });
+    }
+
+    /**
+     * Scope a query to only include internships that are currently ongoing.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|static  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOngoing($query)
+    {
+        $currentDate = Carbon::now()->format('Y-m-d');
+
+        return $query->whereDate('start_date', '<=', $currentDate)
+            ->whereDate('end_date', '>=', $currentDate);
     }
 }

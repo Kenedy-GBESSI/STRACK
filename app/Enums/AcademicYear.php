@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum StudyField: string
+enum AcademicYear: string
 {
-    case SOFTWARE_ENGINEERING = 'Génie Logiciel';
-    case CYBERSECURITY = 'Sécurité Informatique';
-    case INTERNET_MULTIMEDIA = 'Internet et Multimédia';
-    case ARTIFICIAL_INTELLIGENCE = 'Intelligence Artificielle';
-    case IAOT = 'Système Embarqué';
-
+    case FIRST_YEAR = 'Première Année';
+    case SECOND_YEAR = 'Deuxième Année';
+    case THIRD_YEAR = 'Troisième Année';
+    case MASTER_1 = 'Master I';
+    case MASTER_2 = 'Master II';
 
     public static function getLabel(self $value): string
     {

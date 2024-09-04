@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AcademicYear;
 use App\Enums\InternshipStatus;
 use App\Enums\StudyField;
 use App\Models\Student;
@@ -31,6 +32,7 @@ class StudentFactory extends Factory
             'matriculation_number' => fake()->unique()->regexify('[0-9]{8}'),
             'study_field' => fake()->randomElement(StudyField::cases()),
             'internship_status' => fake()->randomElement(InternshipStatus::cases()),
+            'academic_year' => fake()->randomElement(AcademicYear::cases())
         ];
     }
 

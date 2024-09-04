@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\InternShips;
 
+use App\Enums\AcademicYear;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\InteractsWithFailedValidationAttempt;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreInternShipRequest extends FormRequest
 {
@@ -29,6 +31,7 @@ class StoreInternShipRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after_or_equal:start_date'],
+            'academic_year' => ['required','string', 'max:255', new Enum(AcademicYear::class)],
 
             // Associated's file
             'fileData' => ['nullable', 'array', 'max:1'],

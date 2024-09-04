@@ -299,6 +299,11 @@ export default {
             type: Object,
             required: true,
         },
+
+        internShipId: {
+            type: [String, Number],
+            required: false
+        }
     },
 
     setup() {
@@ -315,7 +320,7 @@ export default {
                 requirements: null,
                 title: null,
                 description: null,
-                intern_ship_id: null,
+                intern_ship_id: this.internShipId  ?? null,
                 fileData: [],
             }),
         };

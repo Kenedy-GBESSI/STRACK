@@ -40,10 +40,11 @@ class OfferController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         return Inertia::render('Offers/Create', [
-            'internShips' => InternShip::toMultiselectFormat()
+            'internShips' => InternShip::toMultiselectFormat(),
+            'internShipId' => $request->has('from_intern_ship_id') ? $request->from_intern_ship_id : null
         ]);
     }
 

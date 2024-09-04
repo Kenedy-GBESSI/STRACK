@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->date('start_date');
             $table->date('end_date');
-            
+            $table->string('academic_year');
+
             // File associated
             $table->string('file_associated_name')->nullable()->unique();
             $table->text('file_associated_uuid')->nullable();
