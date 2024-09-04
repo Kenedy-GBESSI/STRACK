@@ -26,7 +26,7 @@
             >
                 <MenuItem v-slot="{ active }">
                     <InertiaLink
-                        :href="route('dashboard')"
+                        :href="route('home')"
                         class="block px-4 py-2 text-sm text-gray-700"
                         :class="[active ? 'bg-gray-100' : '']"
                     >

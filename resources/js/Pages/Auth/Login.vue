@@ -86,6 +86,13 @@
                         </PrimaryButton>
                     </form>
                 </div>
+                <p class="text-start pt-2">
+                        <InertiaLink
+                            :href="route('company-register-view')"
+                            class="text-sm text-[#0047FF] font-semibold underline opacity-80"
+                            >Vous êtes une nouvelle entreprise ? Enregistrez-vous ici.</InertiaLink
+                        >
+                    </p>
             </div>
         </div>
     </div>

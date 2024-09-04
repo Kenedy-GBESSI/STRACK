@@ -17,7 +17,26 @@
                         aria-label="Sidebar"
                     >
                         <InertiaLink
-                            :href="route('dashboard')"
+                            v-if="$page.props.auth.user.role === 'Company'"
+                            :href="route('company.dashboard')"
+                            class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
+                            :class="
+                                isUrl('dashboard')
+                                    ? 'border-l-2 border-white  bg-[#268FF2]'
+                                    : ''
+                            "
+                        >
+                            <FontAwesomeIcon
+                                size="fa-lg"
+                                class="mr-4 flex-shrink-0 h-6 w-6 text-white group-hover:text-white fa-light fa-chart-pie"
+                            />
+
+                            Tableau de bord
+                        </InertiaLink>
+
+                        <InertiaLink
+                            v-if="$page.props.auth.user.role === 'Institute'"
+                            :href="route('institute.dashboard')"
                             class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
                             :class="
                                 isUrl('dashboard')
@@ -33,6 +52,7 @@
                             Tableau de bord
                         </InertiaLink>
                         <InertiaLink
+                            v-if="$page.props.auth.user.role === 'Institute'"
                             :href="route('students.index')"
                             class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
                             :class="
@@ -49,6 +69,7 @@
                             Étudiants
                         </InertiaLink>
                         <InertiaLink
+                            v-if="$page.props.auth.user.role === 'Institute'"
                             :href="route('companies.index')"
                             class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
                             :class="
@@ -65,6 +86,10 @@
                             Entreprises
                         </InertiaLink>
                         <InertiaLink
+                            v-if="
+                                $page.props.auth.user.role === 'Institute' ||
+                                $page.props.auth.user.role === 'Company'
+                            "
                             :href="route('intern-ships.index')"
                             class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
                             :class="
@@ -81,6 +106,7 @@
                             Stages
                         </InertiaLink>
                         <InertiaLink
+                            v-if="$page.props.auth.user.role === 'Company'"
                             :href="route('offers.index')"
                             class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
                             :class="

@@ -42,6 +42,8 @@ class HandleInertiaRequests extends Middleware
                         'id' => $request->user()->id,
                         'email' => $request->user()->email,
                         'full_name' => $request->user()->full_name,
+                        'profile' => $request->user()->profile,
+                        'role' => $request->user()->role,
                         'profile_photo_url' => 'https://www.gravatar.com/avatar/' . md5($request->user()->email),
                         'two_factor_enabled' => Features::enabled(Features::twoFactorAuthentication())
                             && ! is_null($request->user()->two_factor_secret),

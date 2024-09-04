@@ -19,7 +19,7 @@
                             <h1
                                 class="font-bold sm:text-2xl text-base leading-8"
                             >
-                                Création de nouvelle offre
+                                Modification d'offre
                             </h1>
                         </div>
                     </div>

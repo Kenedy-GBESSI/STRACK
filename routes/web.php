@@ -6,7 +6,7 @@ use App\Http\Controllers\Files\SystemFilePondController;
 use App\Http\Controllers\InternShips\InternShipController;
 use App\Http\Controllers\Offers\OfferController;
 use App\Http\Controllers\Students\StudentController;
-use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -21,15 +21,7 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
+Route::redirect('/', '/login');
 Route::get('/company-register-view', [CompanyRegisterController::class, 'companyRegisterView'])->name('company-register-view');
 Route::post('/company-register', [CompanyRegisterController::class, 'companyRegister'])->name('company-register');
 
@@ -39,24 +31,51 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/home', function (Request $request) {
 
-
-    // Students
-    Route::resource('students', StudentController::class)->only('index', 'show');
-
-    // Company
-    Route::resource('companies', CompanyController::class)->except('create', 'update', 'store', 'edit');
-    Route::post('/companies/{company}/reject', [CompanyController::class, 'rejectCompany'])->name('companies.reject-company');
-    Route::post('/companies/{company}/validate', [CompanyController::class, 'validateCompany'])->name('companies.validate-company');
+        switch ($request->user()->role) {
+            case 'Institute':
+                return redirect(route('institute.dashboard'));
+            case 'Company':
+                return redirect(route('company.dashboard'));
+            case 'Student':
+                return redirect(route('student.dashboard'));
+            default:
+                abort(404);
+        }
+    })->name('home');
 
     // InternShips
     Route::resource('intern-ships', InternShipController::class);
 
-    // Offers
-    Route::resource('offers', OfferController::class);
+    Route::middleware(['checkProfileType:App\Models\Institute'])->group(function () {
+
+        Route::get('dashboard', function () {
+            return Inertia::render('Dashboard');
+        })->name('institute.dashboard');
+
+        // Students
+        Route::resource('students', StudentController::class)->only('index', 'show');
+
+        // Company
+        Route::resource('companies', CompanyController::class)->except('create', 'update', 'store', 'edit');
+        Route::post('/companies/{company}/reject', [CompanyController::class, 'rejectCompany'])->name('companies.reject-company');
+        Route::post('/companies/{company}/validate', [CompanyController::class, 'validateCompany'])->name('companies.validate-company');
+    });
+
+    Route::middleware(['checkProfileType:App\Models\Company'])->group(function () {
+
+        Route::get('dashboard/company', function () {
+            return Inertia::render('Companies/Dashboard');
+        })->name('company.dashboard');
+
+
+        // Offers
+        Route::resource('offers', OfferController::class);
+    });
+
+
+
 
     // Filepond integration
     Route::get('filepond/api/process', [SystemFilePondController::class, 'show'])->name('filepond.show');

@@ -11,23 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offers', function (Blueprint $table) {
+        Schema::create('candidacies', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->text('requirements');
-            $table->text('responsibilities')->nullable();
+            $table->string('status')->default('Nouveau');
 
-            $table->foreignId('intern_ship_id')
-                ->nullable()
+            $table->foreignId('offer_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->foreignId('company_id')
+            $table->foreignId('student_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
-            // Fichier de detail
+
+            // CV DE L'ÉTUDIANT
             $table->string('file_associated_name')->nullable()->unique();
             $table->text('file_associated_uuid')->nullable();
             $table->string('file_associated_path')->nullable();
@@ -41,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('offers');
+        Schema::dropIfExists('candidacies');
     }
 };

@@ -51,7 +51,7 @@
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{ internShip.academic_year ?? '-' }}
+                                {{ internShip.academic_year ?? "-" }}
                             </td>
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
@@ -105,7 +105,13 @@
                                                     >
                                                 </InertiaLink>
                                             </li>
-                                            <li class="w-full p-2">
+                                            <li
+                                                v-if="
+                                                    $page.props.auth.user
+                                                        .role === 'Institute'
+                                                "
+                                                class="w-full p-2"
+                                            >
                                                 <InertiaLink
                                                     :href="
                                                         route(
@@ -124,10 +130,19 @@
                                                     >
                                                 </InertiaLink>
                                             </li>
-                                            <li class="w-full p-2">
+                                            <li
+                                                v-if="
+                                                    $page.props.auth.user
+                                                        .role === 'Company'
+                                                "
+                                                class="w-full p-2"
+                                            >
                                                 <InertiaLink
                                                     :title="'Créer de nouvelle offre à base de ce stage'"
-                                                    :href="'/offers/create?from_intern_ship_id=' + internShip.id"
+                                                    :href="
+                                                        '/offers/create?from_intern_ship_id=' +
+                                                        internShip.id
+                                                    "
                                                     class="text-sm font-semibold text-[#268FF2]"
                                                 >
                                                     <FontAwesomeIcon
@@ -139,7 +154,13 @@
                                                     >
                                                 </InertiaLink>
                                             </li>
-                                            <li class="w-full p-2">
+                                            <li
+                                                v-if="
+                                                    $page.props.auth.user
+                                                        .role === 'Institute'
+                                                "
+                                                class="w-full p-2"
+                                            >
                                                 <button
                                                     title="Supprimer"
                                                     @click="destroy(internShip)"

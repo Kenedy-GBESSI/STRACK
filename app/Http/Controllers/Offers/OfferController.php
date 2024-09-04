@@ -11,6 +11,7 @@ use App\Http\Requests\Offers\StoreOfferRequest;
 use App\Http\Requests\Offers\UpdateOfferRequest;
 use App\Models\Offer;
 use App\Services\Offers\OfferService;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class OfferController extends Controller
@@ -27,6 +28,7 @@ class OfferController extends Controller
         return Inertia::render('Offers/Index', [
             'filters' => fn() => $request->all('search'),
             'offers' => fn() => Offer::query()
+                ->where('company_id', Auth::user()->profile_id)
                 ->with('internShip')
                 ->filter(request()->only('search'))
                 ->orderBy('title', 'asc')

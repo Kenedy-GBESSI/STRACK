@@ -56,7 +56,8 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
-        'full_name'
+        'full_name',
+        'role'
     ];
 
     public function profile(): MorphTo
@@ -83,7 +84,7 @@ class User extends Authenticatable
         });
     }
 
-     /**
+    /**
      * @return string
      */
     public function getFullNameAttribute()
@@ -97,7 +98,21 @@ class User extends Authenticatable
     protected function password(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => Hash::isHashed($value) ? $value : Hash::make($value),
+            set: fn($value) => Hash::isHashed($value) ? $value : Hash::make($value),
         );
+    }
+
+    public function getRoleAttribute()
+    {
+        switch ($this->profile_type) {
+            case 'App\\Models\\Institute':
+                return 'Institute';
+            case 'App\\Models\\Company':
+                return 'Company';
+            case 'App\\Models\\Student':
+                return 'Student';
+            default:
+                return null;
+        }
     }
 }

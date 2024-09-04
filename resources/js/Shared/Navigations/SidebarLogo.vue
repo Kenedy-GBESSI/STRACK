@@ -1,5 +1,5 @@
 <template>
-    <InertiaLink :href="route('dashboard')" class="md:mx-auto">
+    <InertiaLink :href="route('home')" class="md:mx-auto">
         <div
             class="2xl:px-0 px-2 py-2 flex space-x-[10px] items-center justify-center"
         >

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HandleFiles;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Offer extends Model
 {
@@ -35,6 +36,10 @@ class Offer extends Model
      */
     protected static function booted(): void
     {
+        static::creating(function (Offer $offer) {
+            $offer->company_id = Auth::user()->profile_id;
+        });
+
         static::deleting(function (Offer $offer) {
             (new OfferService)->destroyFile($offer);
         });
@@ -43,6 +48,11 @@ class Offer extends Model
     public function internShip(): BelongsTo
     {
         return $this->belongsTo(InternShip::class);
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**
