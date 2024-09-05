@@ -1,7 +1,7 @@
 <template>
     <div class="max-w-screen-xl mx-auto sm:py-8 py-4 px-2">
-        <h1 class="font-bold sm:text-2xl text-base leading-8">
-            Les Offres des stages en cours vous concernant
+        <h1 class="font-bold sm:text-2xl text-base leading-8 sm:text-start text-center">
+            Les Offres des stages en cours que vous pouvez postuler
         </h1>
         <div class="my-4">
             <SearchRecordsInput v-model="form.search" class="relative w-full" />
