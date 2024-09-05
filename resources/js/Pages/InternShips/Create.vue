@@ -27,7 +27,7 @@
                         <form @submit.prevent="submit">
                             <div class="px-4 py-5 bg-white sm:p-6">
                                 <div class="flex flex-wrap -mr-6">
-                                    <div class="pr-6 pb-4 sm:w-1/4 w-full">
+                                    <div class="pr-6 pb-4 lg:w-1/4 w-full">
                                         <InputLabel
                                             for="title"
                                             value="Titre *"
@@ -36,6 +36,7 @@
                                             id="title"
                                             v-model="form.title"
                                             name="title"
+                                            class="w-full"
                                             type="text"
                                         />
                                         <InputError
@@ -61,7 +62,7 @@
                                         :error="form.errors.end_date"
                                         class="pb-4 pr-6 w-full lg:w-1/4"
                                     />
-                                    <div class="pr-6 pb-4 sm:w-1/4 w-full">
+                                    <div class="pr-6 pb-4 lg:w-1/4 w-full">
                                         <InputLabel
                                             for="academic_year"
                                             value="Année"

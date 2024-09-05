@@ -8,7 +8,7 @@
             id="querySearch"
             ref="searchInputRef"
             type="text"
-            class="w-full border-none outline-none bg-[#FAFAFA] h-[50px] pl-12 lg:text-base text-sm font-medium appearance-none rounded-lg"
+            class="w-full border border-[#c1bfbf] outline-none bg-[#FAFAFA] h-[50px] pl-12 lg:text-base text-sm font-medium appearance-none rounded-lg"
             :placeholder="inputPlaceholder"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"

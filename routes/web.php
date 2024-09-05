@@ -5,6 +5,7 @@ use App\Http\Controllers\Companies\CompanyRegisterController;
 use App\Http\Controllers\Files\SystemFilePondController;
 use App\Http\Controllers\InternShips\InternShipController;
 use App\Http\Controllers\Offers\OfferController;
+use App\Http\Controllers\Offers\OfferForStudentController;
 use App\Http\Controllers\Students\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +75,15 @@ Route::middleware([
         Route::resource('offers', OfferController::class);
     });
 
+    Route::middleware(['checkProfileType:App\Models\Student'])->group(function () {
+
+        Route::get('dashboard/students', function () {
+            return Inertia::render('Students/Dashboard');
+        })->name('student.dashboard');
+
+        Route::get('get-offers-for-students', [OfferForStudentController::class, 'getOffersForStudent'])->name('students.offers');
+
+    });
 
 
 

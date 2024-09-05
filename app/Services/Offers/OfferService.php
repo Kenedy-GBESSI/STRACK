@@ -93,8 +93,8 @@ class OfferService
      */
     public function loadForDisplay(Offer $offer)
     {
-        $offer->loadMissing('internShip');
-        
+        $offer->loadMissing('internShip', 'company');
+
         $FileData = $this->getFileData($offer);
 
         return array_merge(
@@ -102,6 +102,7 @@ class OfferService
             [
                 'fileData' => $FileData ? [$FileData] : [],
                 'intern_ship' => $offer->internShip,
+                'company' => $offer->company,
             ]
         );
     }
