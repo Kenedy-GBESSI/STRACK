@@ -75,7 +75,7 @@
                                 {{ offer?.intern_ship?.title ?? "-" }}
                             </td>
                             <td
-                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium cursor-pointer"
                             >
                                 <Dropdown :overlay="false" direction="right">
                                     <template #trigger>

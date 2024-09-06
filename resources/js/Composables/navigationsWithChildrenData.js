@@ -20,6 +20,10 @@ export default function useNavigationsData() {
             name: "Offres",
             englishName: "offers",
         },
+        {
+            name: "Candidatures",
+            englishName: "candidacies",
+        },
     ];
 
     return { navigationsWithChildren };

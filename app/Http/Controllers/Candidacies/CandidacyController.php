@@ -10,18 +10,21 @@ use App\Models\Offer;
 use App\Models\Student;
 use App\Services\Candidacy\CandidacyService;
 use App\Traits\InteractsWithAlert;
-use Illuminate\Http\Request;
+use App\Enums\PartnershipStatus;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class CandidacyController extends Controller
 {
     use InteractsWithAlert;
 
     /**
-     * To apply an offer by student 
+     * To apply an offer by student
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function toApplyOffer(ToApplyOfferRequest $request, Student $student, Offer $offer) {
+    public function toApplyOffer(ToApplyOfferRequest $request, Student $student, Offer $offer)
+    {
 
         $candidacy = Candidacy::create([
             'student_id' => $student->id,
@@ -35,5 +38,42 @@ class CandidacyController extends Controller
         $this->alert('Vous avez bien postulé à l\'offre !');
 
         return back();
+    }
+
+    /**
+     * @return \Inertia\Inertia;
+     */
+    public function getCandidaciesForCompany()
+    {
+        return Inertia::render('Companies/Candidacies/Index', [
+            'filters' => fn() => request()->all('search', 'candidacy_status'),
+            'status' => fn() => PartnershipStatus::toMultiselectFormat(),
+            'candidacies' => fn() => Candidacy::query()
+                ->whereHas('offer', function ($query) {
+                    $query->where('company_id', Auth::user()->profile_id);
+                })
+                ->with(['student', 'student.user', 'offer', 'offer.internShip'])
+                ->filter(request()->only('search', 'candidacy_status'))
+                ->orderBy(Candidacy::UPDATED_AT)
+                ->paginate(config('custom.records_per_page'))
+                ->withQueryString(),
+        ]);
+    }
+
+    /**
+     * @return \Inertia\Inertia;
+     */
+    public function showCandidacy(Candidacy $candidacy)
+    {
+        $fileData = (new CandidacyService)->getFileData($candidacy);
+
+        return Inertia::render('Companies/Candidacies/Show', [
+            'candidacy' => fn() => array_merge(
+                $candidacy->load(['student', 'student.user', 'offer', 'offer.internShip'])->toArray(),
+                [
+                    'fileData' => $fileData ? [$fileData] : []
+                ]
+            )
+        ]);
     }
 }

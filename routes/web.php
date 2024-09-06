@@ -75,6 +75,8 @@ Route::middleware([
 
         // Offers
         Route::resource('offers', OfferController::class);
+        Route::get('candidacies', [CandidacyController::class, 'getCandidaciesForCompany'])->name('candidacies');
+        Route::get('candidacies/{candidacy}', [CandidacyController::class, 'showCandidacy'])->name('candidacies.show');
     });
 
     Route::middleware(['checkProfileType:App\Models\Student'])->group(function () {

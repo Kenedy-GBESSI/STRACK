@@ -81,13 +81,13 @@
                             </p>
                         </li>
                         <li
-                            v-if="this.internShip?.fileData"
+                            v-if="internShip?.fileData"
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
                             <p class="font-bold">Fichier associé</p>
                             <FileManager
                                 class="w-full"
-                                :attached-files="this.internShip?.fileData ?? []"
+                                :attached-files="internShip?.fileData ?? []"
                                 label-idle=""
                                 :allow-multiple="false"
                                 :allow-image-prewiew="true"

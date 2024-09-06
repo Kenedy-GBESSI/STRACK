@@ -54,7 +54,7 @@ class CandidacyService
 
     public function getFileData(Candidacy $candidacy): ?FileData
     {
-        if (empty($offer->file_associated_name) || empty($offer->file_associated_uuid)) {
+        if (empty($candidacy->file_associated_name) || empty($candidacy->file_associated_uuid)) {
             return null;
         }
 
