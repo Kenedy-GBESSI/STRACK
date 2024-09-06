@@ -23,25 +23,25 @@
                 <div class="md:flex hidden sm:space-x-6 space-x-2 pr-2">
                     <InertiaLink
                         v-if="$page.props.auth.user.role === 'Student'"
-                        :href="route('students.offers')"
+                        :href="route('student.dashboard')"
                         class="text-[#F6F6F6] pt-0 pb-1 font-semibold"
                         :class="
-                            isUrl('get-offers-for-students') ? 'border-b-2 border-white' : ''
+                            isUrl('dashboard') ? 'border-b-2 border-white' : ''
                         "
                     >
-                        Offres de stages
+                        Acceuil
                     </InertiaLink>
                     <InertiaLink
                         v-if="$page.props.auth.user.role === 'Student'"
-                        :href="route('students.index')"
+                        :href="route('students.offers')"
                         class="text-[#F6F6F6] pt-0 pb-1 font-semibold"
                         :class="
-                            isUrl('students.index')
+                            isUrl('get-offers-for-students')
                                 ? 'border-b-2 border-white'
                                 : ''
                         "
                     >
-                        Autres informations
+                        Offres de stages
                     </InertiaLink>
                     <form class="inline" @submit.prevent="logout">
                         <button
@@ -127,6 +127,21 @@
                                                 $page.props.auth.user.role ===
                                                 'Student'
                                             "
+                                            :href="route('student.dashboard')"
+                                            class="text-[#F6F6F6] pt-0 pb-1 font-semibold"
+                                            :class="
+                                                isUrl('dashboard')
+                                                    ? 'border-b-2 border-white'
+                                                    : ''
+                                            "
+                                        >
+                                            Acceuil
+                                        </InertiaLink>
+                                        <InertiaLink
+                                            v-if="
+                                                $page.props.auth.user.role ===
+                                                'Student'
+                                            "
                                             :href="route('students.offers')"
                                             class="text-[#F6F6F6] pt-0 pb-1 font-semibold"
                                             :class="
@@ -137,21 +152,7 @@
                                         >
                                             Offres de stages
                                         </InertiaLink>
-                                        <InertiaLink
-                                            v-if="
-                                                $page.props.auth.user.role ===
-                                                'Student'
-                                            "
-                                            :href="route('students.index')"
-                                            class="text-[#F6F6F6] pt-0 pb-1 font-semibold"
-                                            :class="
-                                                isUrl('students.index')
-                                                    ? 'border-b-2 border-white'
-                                                    : ''
-                                            "
-                                        >
-                                            Autres informations
-                                        </InertiaLink>
+
                                         <form
                                             class="inline"
                                             @submit.prevent="logout"

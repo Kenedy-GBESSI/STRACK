@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
 use App\Data\File\FileResponseHeadersData;
+use App\Models\Candidacy;
 use App\Models\InternShip;
 use App\Models\Offer;
 use App\Services\Files\FileMimeService;
@@ -27,6 +28,12 @@ class SystemFilePondController extends Controller
         if (! $file) {
             $file = Offer::where('file_associated_name', $request->restore)->first();
             $disk = Offer::relatedFileDisk();
+            $path = $file?->file_associated_path;
+        }
+
+        if (! $file) {
+            $file = Candidacy::where('file_associated_name', $request->restore)->first();
+            $disk = Candidacy::relatedFileDisk();
             $path = $file?->file_associated_path;
         }
 

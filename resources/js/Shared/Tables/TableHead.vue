@@ -10,6 +10,7 @@
                 {{ headerName }}
             </th>
             <th
+                v-if="hasActions"
                 scope="col"
                 class="px-2 py-4 text-left text-xs font-bold text-[#6B7A99] uppercase tracking-wider"
             >

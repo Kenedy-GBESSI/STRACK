@@ -64,12 +64,13 @@
                         v-html="formattedText(offer?.responsibilities)"
                         class="text-black w-full leading-[24px] text-sm md:text-base md:text-start text-center"
                     ></p>
-                    <a
-                        href="https://www.iziimo.com/"
-                        target="_blank"
+                    <button
+                        type="button"
+                        title="Postuler"
                         class="w-[150px] text-sm bg-blue-700 rounded md:bg-transparent text-[#EDEDEF] md:p-0 btn-link font-normal"
                         aria-current="page"
-                        >Postuler</a
+                        @click.prevent="openSendCandidayModal(offer)"
+                        >Postuler</button
                     >
                 </div>
             </div>
@@ -78,8 +79,15 @@
         <div v-if="offers.data.length === 0">Aucune offre trouvée !.</div>
 
         <Pagination class="justify-end mb-4" :links="offers.links" />
-
     </div>
+    <Teleport to="body">
+        <SendCandidacyForm
+            :show="showSendCandidacyModal"
+            :offer-id="selectedOffer?.id"
+            :student-id="$page.props.auth.user?.profile?.id"
+            @update-send-Candidacy-modal="updateSendCandidacylModalStatus"
+        />
+    </Teleport>
 </template>
 
 <script>
@@ -88,6 +96,7 @@ import SearchRecordsInput from "@/Shared/Forms/SearchRecordsInput.vue";
 import { throttle, pickBy } from "lodash";
 import FileManager from "@/Shared/FileManager.vue";
 import { defineAsyncComponent } from "vue";
+import SendCandidacyForm from "@/Shared/Forms/SendCandidacyForm.vue";
 
 const Pagination = defineAsyncComponent({
     loader: () => import("@/Shared/Pagination.vue"),
@@ -98,6 +107,7 @@ export default {
         SearchRecordsInput,
         Pagination,
         FileManager,
+        SendCandidacyForm,
     },
 
     layout: StudentLayout,
@@ -117,6 +127,9 @@ export default {
             form: {
                 search: this.filters.search,
             },
+
+            showSendCandidacyModal: false,
+            selectedOffer: null,
         };
     },
 
@@ -141,6 +154,19 @@ export default {
                 return text;
             }
             return text.replace(/\n/g, "<br>");
+        },
+
+        openSendCandidayModal(selectedOffer) {
+            this.selectedOffer = selectedOffer;
+            this.openModal();
+        },
+
+        openModal(){
+            this.showSendCandidacyModal = true;
+        },
+
+        updateSendCandidacylModalStatus(newStatus) {
+            this.showSendCandidacyModal = newStatus;
         },
     },
 };

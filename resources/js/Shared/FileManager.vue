@@ -16,15 +16,17 @@
             @removefile="removeFile"
             @addfile="addFile"
         />
-        <ConfirmationDialog
-            v-if="showConfirmationModal"
-            :message="message"
-            :title="title"
-            :show="show.default"
-            :closeable="closeable"
-            @confirm="confirm()"
-            @close="close()"
-        />
+        <Teleport to="body">
+            <ConfirmationDialog
+                v-if="showConfirmationModal"
+                :message="message"
+                :title="title"
+                :show="show.default"
+                :closeable="closeable"
+                @confirm="confirm()"
+                @close="close()"
+            />
+        </Teleport>
     </div>
 </template>
 
@@ -46,7 +48,7 @@ const FilePond = vueFilePond(
     FilePondPluginImageOverlay,
     FilePondPluginGetFile,
     FilePondPluginFileValidateSize,
-    FilePondPluginImagePreview
+    FilePondPluginImagePreview,
 );
 
 export default {

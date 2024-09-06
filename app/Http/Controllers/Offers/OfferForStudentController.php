@@ -36,6 +36,9 @@ class OfferForStudentController extends Controller
                     })
                         ->orWhereDoesntHave('internShip');
                 })
+                ->whereDoesntHave('candidacies', function ($query) {
+                    $query->where('student_id', Auth::user()->profile_id);
+                })
                 ->with('internShip')
                 ->filter(request()->only('search'))
                 ->orderBy('title', 'asc')
