@@ -17,21 +17,6 @@ return new class extends Migration
             $table->string('study_field'); // Filière;
             $table->string('internship_status'); // Status Stage => [En stage, Pas de stage, Fin de stage]
             $table->string('academic_year');
-
-            // Information's stage
-            $table->integer('company_note')->nullable();
-            $table->integer('final_note')->nullable();
-            $table->foreignId('intern_ship_id')
-                ->nullable()
-                ->constrained();
-
-            // Fichier de rapport
-            $table->string('file_associated_name')->nullable()->unique();
-            $table->text('file_associated_uuid')->nullable();
-            $table->string('file_associated_path')->nullable();
-
-            $table->boolean('is_intern_ship_valid')->default(false);
-
             $table->timestamps();
         });
     }
