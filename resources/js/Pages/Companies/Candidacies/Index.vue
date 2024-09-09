@@ -167,7 +167,7 @@
                                                 <button
                                                     title="Rejeter"
                                                     @click="
-                                                        rejectComapany(
+                                                        rejectCandidacy(
                                                             candidacy,
                                                         )
                                                     "
@@ -192,7 +192,7 @@
                                                 <button
                                                     title="Valider"
                                                     @click="
-                                                        validateCompany(
+                                                        validateCandidacy(
                                                             candidacy,
                                                         )
                                                     "
@@ -350,12 +350,12 @@ export default {
     },
 
     methods: {
-        rejectedCandidacy(candidacy) {
+        rejectCandidacy(candidacy) {
             this.rejectedCandidacy = candidacy;
             this.openRejectModal(candidacy);
         },
 
-        validatedCandidacy(company) {
+        validateCandidacy(company) {
             this.validatedCompany = company;
             this.openValidateModal(company);
         },
@@ -366,7 +366,7 @@ export default {
         },
 
         openValidateModal(validatedCandidacy) {
-            this.dialogValidateBox.message = `Êtes-vous sûr de vouloir valider l'entreprise "${validatedCandidacy?.student?.user?.full_name}" ?`;
+            this.dialogValidateBox.message = `Êtes-vous sûr de vouloir valider la candidacture de l'étudiant "${validatedCandidacy?.student?.user?.full_name}" ?`;
             this.showValidateModal = true;
         },
 

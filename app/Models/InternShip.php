@@ -80,8 +80,6 @@ class InternShip extends Model
     public function scopeOngoing($query)
     {
         $currentDate = Carbon::now()->format('Y-m-d');
-
-        return $query->whereDate('start_date', '<=', $currentDate)
-            ->whereDate('end_date', '>=', $currentDate);
+        return $query->whereDate('end_date', '>=', $currentDate);
     }
 }

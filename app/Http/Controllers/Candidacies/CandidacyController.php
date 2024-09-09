@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Candidacies;
 
 use App\Data\File\FileData;
+use App\Enums\InternshipStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Candidacies\ToApplyOfferRequest;
 use App\Models\Candidacy;
@@ -75,5 +76,38 @@ class CandidacyController extends Controller
                 ]
             )
         ]);
+    }
+
+    public function rejectCandidacy(Candidacy $candidacy)
+    {
+        $candidacy->update([
+            'status' => PartnershipStatus::REJECTED_PARTNERSHIP->value
+        ]);
+
+        $this->alert("La candidature de {$candidacy->student?->user?->full_name} est rejectée avec succès !");
+    }
+
+    public function validateCandidacy(Candidacy $candidacy)
+    {
+        $candidacy->update([
+            'status' => PartnershipStatus::VALIDATED_PARTNERSHIP->value
+        ]);
+
+        $student = $candidacy->student;
+
+        if( $student->internship_status === InternshipStatus::ON_INTERNSHIP) {
+
+            $this->warningAlert('Le candidat est déjà en stage mais il pourra récevoir votre réponse et vous écrira !');
+
+            return back();
+
+        } else {
+
+            // Here, we will make the process of validate candidacy
+
+        }
+
+
+        $this->alert("La candidature de {$candidacy->student?->user?->full_name} est validée avec succès !");
     }
 }

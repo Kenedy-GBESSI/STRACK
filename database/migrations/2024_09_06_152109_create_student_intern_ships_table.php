@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer('company_note')->nullable();
             $table->integer('final_note')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
             $table->boolean('is_intern_ship_valid')->default(false);
 
             $table->foreignId('intern_ship_id')

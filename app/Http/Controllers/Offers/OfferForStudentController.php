@@ -31,7 +31,6 @@ class OfferForStudentController extends Controller
 
                         $query
                             ->where('academic_year', Auth::user()->profile->academic_year)
-                            ->whereDate('start_date', '<=', $currentDate)
                             ->whereDate('end_date', '>=', $currentDate);;
                     })
                         ->orWhereDoesntHave('internShip');
