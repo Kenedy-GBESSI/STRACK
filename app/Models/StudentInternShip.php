@@ -40,6 +40,11 @@ class StudentInternShip extends Model
         return $this->belongsTo(Student::class);
     }
 
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     /**
      * Scope a query to only include models based on search.
      *

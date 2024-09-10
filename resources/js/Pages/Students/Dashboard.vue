@@ -1,5 +1,51 @@
 <template>
-    <div class="max-w-screen-xl mx-auto sm:py-8 py-4 px-2">
+    <div class="max-w-screen-xl mx-auto sm:py-8 py-4 px-2 mb-8">
+        <section class="just-about-us w-full mb-8">
+            <div
+                class="max-w-screen-xl mx-auto text-white space-y-[30px] pt-4 py-0 pb-0 md:pt-4 md:py-0 md:pb-0 flex flex-col items-center"
+                data-aos="fade-up"
+                data-aos-duration="3000"
+            >
+                <p
+                    class="text-center text-[#212121] text-base font-bold uppercase"
+                >
+                    Vous êtes en stage dans l'entreprise <i>"{{ studentInternShip?.company?.company_name}}"</i>
+                </p>
+
+                <img
+                    src="@/Assets/images/study-group-african-people.jpg"
+                    class="md:w-auto md:h-[666px] w-[265px] h-[180px]"
+                    alt=""
+                />
+                <div
+                    class="w-full theLast text-white flex flex-col space-y-[13px] mx-auto xl:pl-[11.5%] xl:pr-[24px] pl-[13px] pr-[13px] md:justify-start justify-center md:items-start items-center py-[32px]"
+                >
+                    <p
+                        class="font-semibold text-[#212121] text-[24px] md:text-[40px] uppercase p-0"
+                    >
+                        DÉTAILS
+                    </p>
+
+                    <p
+                        class="text-black w-full leading-[24px] text-sm md:text-base md:text-start text-center"
+                    >DATE DE DEMARRAGE: {{ formatDate(studentInternShip?.start_date) }}</p>
+
+                    <p
+                        class="text-black w-full leading-[24px] text-sm md:text-base md:text-start text-center"
+                    >DATE DE FIN: {{ formatDate(studentInternShip?.end_date) }}</p>
+
+                    <button
+                        type="button"
+                        title="Envoyer un rapport"
+                        class="w-[150px] text-sm bg-blue-700 rounded md:bg-transparent text-[#EDEDEF] md:p-0 btn-link font-normal"
+                        aria-current="page"
+                    >
+                        Envoyer un rapport
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <div class="flex flex-col bg-[#FFFFFF] p-4 rounded-lg">
             <h1 class="font-semibold pb-4 uppercase">
                 Liste des différentes offres auxquelles vous avez postulées
@@ -67,7 +113,6 @@
                 <table class="min-w-full table-fixed divide-y divide-gray-300">
                     <TableHead
                         :header="tableHeader"
-                        :has-actions="false"
                         class="sticky top-0 bg-[#FFFFFF] z-40"
                     />
                     <tbody class="divide-y divide-gray-200">
@@ -79,10 +124,7 @@
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{
-                                    candidacy.offer?.title ??
-                                    "-"
-                                }}
+                                {{ candidacy.offer?.title ?? "-" }}
                             </td>
 
                             <td
@@ -106,10 +148,7 @@
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
-                                {{
-                                    candidacy.offer?.company?.address ??
-                                    "-"
-                                }}
+                                {{ candidacy.offer?.company?.address ?? "-" }}
                             </td>
 
                             <td
@@ -131,6 +170,22 @@
                                             : candidacy.status ?? "-"
                                     }}</span
                                 >
+                            </td>
+                            <td
+                                class="pr-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                <InertiaLink
+                                    v-if="
+                                        candidacy.status === 'Validé' &&
+                                        $page.props.auth.user?.profile
+                                            ?.internship_status !== 'En stage'
+                                    "
+                                    title="Si vous appuyez , vous démarrez automatiquement votre stage dans cette entreprise."
+                                    :href="`/start-intern-ship/${$page.props.auth.user?.profile?.id}/${candidacy.offer?.id}`"
+                                    class="text-sm text-[#268FF2]"
+                                >
+                                    <span class="pl-2">Démarrer stage</span>
+                                </InertiaLink>
                             </td>
                         </tr>
                         <tr v-if="candidacies.data.length === 0">
@@ -159,6 +214,7 @@ import Dropdown from "@/Components/Dropdown.vue";
 import { Link as InertiaLink } from "@inertiajs/vue3";
 import { defineAsyncComponent } from "vue";
 import { throttle, pickBy } from "lodash";
+import useDateUtilities from "@/Composables/dateUtilities.js";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
@@ -196,12 +252,25 @@ export default {
             },
         },
 
+        studentInternShip: {
+            type: Object,
+            default() {
+                return {}
+            }
+        },
+
         status: {
             type: Array,
             default() {
                 return [];
             },
         },
+    },
+
+    setup() {
+        const { formatDate } = useDateUtilities();
+
+        return { formatDate };
     },
 
     data() {
@@ -238,4 +307,29 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.just-about-us > div {
+    background: #f1f0ef;
+    border-radius: 16px 16px 0px 0px;
+}
+.theLast {
+    background: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.btn-link {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 12px;
+    height: 40px;
+    background: #007aed;
+    border-radius: 50px;
+}
+@media screen and (max-width: 320px) {
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+</style>

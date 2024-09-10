@@ -355,9 +355,9 @@ export default {
             this.openRejectModal(candidacy);
         },
 
-        validateCandidacy(company) {
-            this.validatedCompany = company;
-            this.openValidateModal(company);
+        validateCandidacy(candidacy) {
+            this.validatedCandidacy = candidacy;
+            this.openValidateModal(candidacy);
         },
 
         openRejectModal(rejectedCandidacy) {
@@ -372,13 +372,13 @@ export default {
 
         confirmRejectModal() {
             this.showRejectModal = false;
-            this.$inertia.post(`/companies/${this.rejectedCandidacy.id}/reject`);
+            this.$inertia.post(`/candidacies/${this.rejectedCandidacy.id}/reject`);
         },
 
         confirmValidateModal() {
             this.showValidateModal = false;
             this.$inertia.post(
-                `/companies/${this.validatedCandidacy.id}/validate`,
+                `/candidacies/${this.validatedCandidacy.id}/validate`,
             );
         },
 

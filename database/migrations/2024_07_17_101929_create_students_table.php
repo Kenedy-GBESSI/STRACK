@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('matriculation_number')->unique();
             $table->string('study_field'); // Filière;
-            $table->string('internship_status'); // Status Stage => [En stage, Pas de stage, Fin de stage]
             $table->string('academic_year');
             $table->timestamps();
         });

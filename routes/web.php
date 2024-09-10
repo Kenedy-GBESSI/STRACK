@@ -9,6 +9,7 @@ use App\Http\Controllers\Offers\OfferController;
 use App\Http\Controllers\Offers\OfferForStudentController;
 use App\Http\Controllers\Students\DashboardStudentController;
 use App\Http\Controllers\Students\StudentController;
+use App\Http\Controllers\Students\StudentInternShipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -75,8 +76,12 @@ Route::middleware([
 
         // Offers
         Route::resource('offers', OfferController::class);
+
+        // Candidacies
         Route::get('candidacies', [CandidacyController::class, 'getCandidaciesForCompany'])->name('candidacies');
         Route::get('candidacies/{candidacy}', [CandidacyController::class, 'showCandidacy'])->name('candidacies.show');
+        Route::post('/candidacies/{candidacy}/reject', [CandidacyController::class, 'rejectCandidacy'])->name('candidacies.reject-company');
+        Route::post('/candidacies/{candidacy}/validate', [CandidacyController::class, 'validateCandidacy'])->name('candidacies.validate-company');
     });
 
     Route::middleware(['checkProfileType:App\Models\Student'])->group(function () {
@@ -85,6 +90,9 @@ Route::middleware([
 
         Route::get('get-offers-for-students', [OfferForStudentController::class, 'getOffersForStudent'])->name('students.offers');
         Route::post('/apply-to-offer/{student}/{offer}', [CandidacyController::class, 'toApplyOffer'])->name('students.to-apply-offer');
+
+        Route::get('/start-intern-ship/{student}/{offer}', [StudentInternShipController::class, 'startInternShip'])->name('students.start-intern-ship');
+
     });
 
 

@@ -31,7 +31,6 @@ class StudentFactory extends Factory
         return [
             'matriculation_number' => fake()->unique()->regexify('[0-9]{8}'),
             'study_field' => fake()->randomElement(StudyField::cases()),
-            'internship_status' => fake()->randomElement(InternshipStatus::cases()),
             'academic_year' => fake()->randomElement(AcademicYear::cases())
         ];
     }

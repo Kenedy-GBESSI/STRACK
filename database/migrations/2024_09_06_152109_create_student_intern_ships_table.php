@@ -27,6 +27,10 @@ return new class extends Migration
                 ->nullable()
                 ->constrained();
 
+            $table->foreignId('company_id')
+                ->nullable()
+                ->constrained();
+
             // Rapport de stage
 
             $table->string('file_associated_name')->nullable()->unique();

@@ -99,15 +99,10 @@ class CandidacyController extends Controller
 
             $this->warningAlert('Le candidat est déjà en stage mais il pourra récevoir votre réponse et vous écrira !');
 
-            return back();
-
         } else {
 
-            // Here, we will make the process of validate candidacy
+            $this->alert("La candidature de {$candidacy->student?->user?->full_name} est validée avec succès !");
 
         }
-
-
-        $this->alert("La candidature de {$candidacy->student?->user?->full_name} est validée avec succès !");
     }
 }

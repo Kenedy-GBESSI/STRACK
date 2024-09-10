@@ -36,7 +36,10 @@ class Student extends Model
     public function internShip(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->studentInternShips()->count() === 1 ? $this->studentInternShips()->with('student', 'internShip')->first() : null,
+            get: fn() => $this->studentInternShips()
+                ->whereDate('end_date', '>=', now())
+                ->with('student', 'internShip', 'company')
+                ->first(),
         );
     }
 
@@ -63,10 +66,10 @@ class Student extends Model
         })->when($filters['internship_status'] ?? null, function ($query, $internshipStatus) {
 
             if ($internshipStatus === InternshipStatus::NOT_ONE_INTERNSHIP->value) {
-                $query->doesntHave('internShip');
+                $query->doesntHave('studentInternShips');
             } else {
 
-                $query->whereHas('internShip', function ($subQuery) use ($internshipStatus) {
+                $query->whereHas('studentInternShips', function ($subQuery) use ($internshipStatus) {
 
                     $subQuery->where(function ($q) use ($internshipStatus) {
 
@@ -85,17 +88,17 @@ class Student extends Model
 
     public function getInternshipStatusAttribute(): string
     {
-        $internship = $this->internShip;
 
-        if (! is_null($internship)) {
+        if ($this->studentInternShips()->count() !== 0) {
 
-            $endDate = $internship->end_date;
+            $internship = $this->internShip;
 
-            if ($endDate && $endDate->isPast()) {
-                return InternshipStatus::INTERNSHIP_FINISHED->value;
+            if (! is_null($internship)) {
+
+                return InternshipStatus::ON_INTERNSHIP->value;
             }
 
-            return InternshipStatus::ON_INTERNSHIP->value;
+            return InternshipStatus::INTERNSHIP_FINISHED->value;
         }
 
         return InternshipStatus::NOT_ONE_INTERNSHIP->value;
