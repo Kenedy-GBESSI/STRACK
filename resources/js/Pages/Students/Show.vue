@@ -38,10 +38,17 @@
                             {{ student.internship_status ?? "-" }}</span
                         >
                         <span
-                            v-if="student.internship_status === 'Fin de stage'"
-                            class="flex justify-center items-center w-[110px] h-8 font-bold text-lg border border-[#145ee080] rounded-[24px] bg-[#E8F0FF] text-[#145EE0]"
+                            v-if="student.internShip?.data?.company_note"
+                            class="flex justify-center items-center w-auto px-2 h-8 font-bold text-lg border border-[#145ee080] rounded-[24px] bg-[#E8F0FF] text-[#145EE0]"
                         >
-                            Note: 18
+                            Note de l'entreprise:
+                            {{ student.internShip?.data?.company_note }}
+                        </span>
+                        <span
+                            class="flex justify-center items-center w-auto px-2 h-8 font-bold text-lg border border-[#145ee080] rounded-[24px] bg-[#E8F0FF] text-[#145EE0]"
+                        >
+                            Note de stage:
+                            {{ student.internShip?.data?.final_note ?? "-" }}
                         </span>
                     </div>
 
@@ -122,13 +129,85 @@
                 </div>
             </div>
         </div>
+        <div
+            v-if="student.internship_status === 'En stage'"
+            class="flex flex-col my-4 bg-[#FFFFFF] p-6"
+        >
+            <h1 class="font-bold text-2xl leading-8">Stage</h1>
+            <ul class="flex flex-col">
+                <li
+                    class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                >
+                    <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                        Entreprise
+                    </p>
+                    <p
+                        class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                    >
+                        {{
+                            student.internShip?.data?.company?.company_name ??
+                            "-"
+                        }}
+                    </p>
+                    <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                        Téléphone de l'entreprise
+                    </p>
+                    <p
+                        class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                    >
+                        {{
+                            student.internShip?.data?.company?.phone_number ??
+                            "-"
+                        }}
+                    </p>
+                </li>
+                <li
+                    v-if="
+                        student.internShip?.fileData &&
+                        student.internShip?.data?.is_intern_ship_valid === true
+                    "
+                    class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                >
+                    <p class="font-bold">RAPPORT DE STAGE</p>
+                    <FileManager
+                        class="w-full"
+                        :attached-files="student.internShip?.fileData ?? []"
+                        label-idle="AUCUN FICHIER"
+                        :allow-multiple="false"
+                        :allow-image-prewiew="true"
+                        :disabled="true"
+                    />
+                </li>
+            </ul>
+        </div>
+        <div>
+            <div class="mb-4 flex justify-start items-center">
+                <PrimaryButton
+                    type="submit"
+                    @click.prevent="openAddNoteModal"
+                >
+                    Donner une note finale
+                </PrimaryButton>
+            </div>
+        </div>
+        <Teleport to="body">
+            <AddNoteForm
+               v-if="showNoteModal"
+               :show="showNoteModal"
+               @close="closeAddNoteModal()"
+               @confirm="confirmAddNoteModal"
+            />
+        </Teleport>
     </div>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link as InertiaLink } from "@inertiajs/vue3";
+import FileManager from "@/Shared/FileManager.vue";
+import PrimaryButton from "@/Shared/PrimaryButton.vue";
 import { defineAsyncComponent } from "vue";
+import AddNoteForm from "@/Shared/Forms/AddNoteForm.vue";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
@@ -138,6 +217,9 @@ export default {
     components: {
         InertiaLink,
         FontAwesomeIcon,
+        FileManager,
+        PrimaryButton,
+        AddNoteForm
     },
 
     layout: AppLayout,
@@ -147,11 +229,25 @@ export default {
 
     data() {
         return {
-            warningDelete: false,
-            deleteString: "",
+            showNoteModal: false,
         };
     },
-    methods: {},
+    methods: {
+        confirmAddNoteModal(note){
+            this.closeAddNoteModal();
+            this.$inertia.post(`/final-note-for-student/${this.student.internShip?.data?.id}`, {
+                note: note
+            });
+        },
+
+        openAddNoteModal() {
+            this.showNoteModal = true;
+        },
+
+        closeAddNoteModal(){
+            this.showNoteModal = false;
+        }
+    },
 };
 </script>
 

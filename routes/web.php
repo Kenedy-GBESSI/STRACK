@@ -61,6 +61,7 @@ Route::middleware([
 
         // Students
         Route::resource('students', StudentController::class)->only('index', 'show');
+        Route::post('final-note-for-student/{student_intern_ship}', [StudentController::class, 'gradeStudent'])->name('students.update-final-note');
 
         // Company
         Route::resource('companies', CompanyController::class)->except('create', 'update', 'store', 'edit');

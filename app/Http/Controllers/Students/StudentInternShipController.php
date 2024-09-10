@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Students;
 
 use App\Data\File\FileData;
-use App\Enums\InternshipStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Candidacies\ToApplyOfferRequest;
 use App\Models\Offer;

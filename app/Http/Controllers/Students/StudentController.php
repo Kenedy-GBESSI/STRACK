@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Students\StoreStudentRequest;
 use App\Http\Requests\Students\UpdateStudentRequest;
 use App\Models\Student;
+use App\Models\StudentInternShip;
+use App\Services\StudentInternShip\StudentInternShipService;
 use App\Traits\InteractsWithAlert;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -24,21 +26,21 @@ class StudentController extends Controller
     public function index(Request $request)
     {
         return Inertia::render('Students/Index', [
-            'filters' => fn () => $request->all('search', 'study_field', 'internship_status'),
-            'studyFields' => fn () => StudyField::toMultiselectFormat(),
-            'internshipStatus' => fn () => InternshipStatus::toMultiselectFormat(),
-            'students' => fn () => Student::query()
-            ->with('user')
-            ->filter(request()->only('search', 'study_field', 'internship_status'))
-            ->join('users', function ($join) {
-                $join->on('students.id', '=', 'users.profile_id')
-                    ->where('users.profile_type', Student::class);
-            })
-            ->orderBy('users.last_name', 'asc')
-            ->orderBy('users.first_name', 'asc')
-            ->select('students.*')
-            ->paginate(config('custom.records_per_page'))
-            ->withQueryString()
+            'filters' => fn() => $request->all('search', 'study_field', 'internship_status'),
+            'studyFields' => fn() => StudyField::toMultiselectFormat(),
+            'internshipStatus' => fn() => InternshipStatus::toMultiselectFormat(),
+            'students' => fn() => Student::query()
+                ->with('user')
+                ->filter(request()->only('search', 'study_field', 'internship_status'))
+                ->join('users', function ($join) {
+                    $join->on('students.id', '=', 'users.profile_id')
+                        ->where('users.profile_type', Student::class);
+                })
+                ->orderBy('users.last_name', 'asc')
+                ->orderBy('users.first_name', 'asc')
+                ->select('students.*')
+                ->paginate(config('custom.records_per_page'))
+                ->withQueryString()
         ]);
     }
 
@@ -50,8 +52,8 @@ class StudentController extends Controller
     public function create()
     {
         return Inertia::render('Students/Create', [
-            'studyFields' => fn () => StudyField::cases(),
-            'internshipStatus' => fn () => InternshipStatus::cases(),
+            'studyFields' => fn() => StudyField::cases(),
+            'internshipStatus' => fn() => InternshipStatus::cases(),
         ]);
     }
 
@@ -76,8 +78,17 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
+        $internShip = $student->internShip;
+        $fileData = is_null($internShip) ? [] :  [(new StudentInternShipService)->getFileData($internShip)];
+
         return Inertia::render('Students/Show', [
-            'student' => $student->load('user'),
+
+            'student' => array_merge($student->load('user')->toArray(), [
+                'internShip' => [
+                    'data' => $internShip?->toArray(),
+                    'fileData' => $fileData
+                ]
+            ]),
         ]);
     }
 
@@ -90,8 +101,8 @@ class StudentController extends Controller
     {
         return Inertia::render('Students/Edit', [
             'student' => $student,
-            'studyFields' => fn () => StudyField::cases(),
-            'internshipStatus' => fn () => InternshipStatus::cases(),
+            'studyFields' => fn() => StudyField::cases(),
+            'internshipStatus' => fn() => InternshipStatus::cases(),
         ]);
     }
 
@@ -107,6 +118,19 @@ class StudentController extends Controller
         $this->alert('L\'étudiant est modifié avec succès !');
 
         return back();
+    }
+
+    public function gradeStudent(Request $request, StudentInternShip $studentInternShip)
+    {
+        $validatedData = $request->validate([
+            'note' => 'required|numeric|min:5|max:17',
+        ]);
+
+        $studentInternShip->update([
+            'final_note' => $validatedData['note']
+        ]);
+
+        $this->alert('La note de l\'étudiant est modifiée avec succès !');
     }
 
     /**
