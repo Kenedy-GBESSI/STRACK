@@ -1,6 +1,12 @@
 <template>
     <div class="max-w-screen-xl mx-auto sm:py-8 py-4 px-2 mb-8">
-        <section class="just-about-us w-full mb-8">
+        <section
+            v-if="
+                studentInternShip &&
+                $page.props.auth.user?.profile?.internship_status === 'En stage'
+            "
+            class="just-about-us w-full mb-8"
+        >
             <div
                 class="max-w-screen-xl mx-auto text-white space-y-[30px] pt-4 py-0 pb-0 md:pt-4 md:py-0 md:pb-0 flex flex-col items-center"
                 data-aos="fade-up"
@@ -9,35 +15,61 @@
                 <p
                     class="text-center text-[#212121] text-base font-bold uppercase"
                 >
-                    Vous êtes en stage dans l'entreprise <i>"{{ studentInternShip?.company?.company_name}}"</i>
+                    Vous êtes en stage dans l'entreprise
+                    <i>"{{ studentInternShip?.company?.company_name }}"</i>
                 </p>
 
                 <img
                     src="@/Assets/images/study-group-african-people.jpg"
-                    class="md:w-auto md:h-[666px] w-[265px] h-[180px]"
+                    class="md:w-auto md:h-[333px] w-[265px] h-[180px]"
                     alt=""
                 />
                 <div
                     class="w-full theLast text-white flex flex-col space-y-[13px] mx-auto xl:pl-[11.5%] xl:pr-[24px] pl-[13px] pr-[13px] md:justify-start justify-center md:items-start items-center py-[32px]"
                 >
                     <p
-                        class="font-semibold text-[#212121] text-[24px] md:text-[40px] uppercase p-0"
+                        class="font-semibold text-black w-full leading-[24px] text-sm md:text-base md:text-start text-center"
                     >
-                        DÉTAILS
+                        CAMPAGNE DE STAGE:
+                        <i>{{ studentInternShip?.intern_ship?.title }}</i>
+                    </p>
+                    <p
+                        class="font-semibold text-black w-full leading-[24px] text-sm md:text-base md:text-start text-center"
+                    >
+                        DATE DE DEMARRAGE:
+                        <i>{{ formatDate(studentInternShip?.start_date) }} </i>
                     </p>
 
                     <p
-                        class="text-black w-full leading-[24px] text-sm md:text-base md:text-start text-center"
-                    >DATE DE DEMARRAGE: {{ formatDate(studentInternShip?.start_date) }}</p>
+                        class="text-black font-semibold w-full leading-[24px] text-sm md:text-base md:text-start text-center"
+                    >
+                        DATE DE FIN:
+                        <i>{{ formatDate(studentInternShip?.end_date) }} </i>
+                    </p>
 
                     <p
-                        class="text-black w-full leading-[24px] text-sm md:text-base md:text-start text-center"
-                    >DATE DE FIN: {{ formatDate(studentInternShip?.end_date) }}</p>
+                        class="text-black font-semibold w-full leading-[24px] text-sm md:text-base md:text-start text-center"
+                    >
+                        RAPPORT DE STAGE:
+                        <i>
+                            {{rapportStatus(studentInternShip) }}
+                        </i>
+                    </p>
+
+                    <p
+                        class="text-black font-semibold w-full leading-[24px] text-sm md:text-base md:text-start text-center"
+                    >
+                        NOTE DE FIN DE STAGE:
+                        <i>
+                           {{ isNil(studentInternShip?.final_note) ? 'Pas encore attribué': studentInternShip?.final_note }}
+                        </i>
+                    </p>
 
                     <button
                         type="button"
-                        title="Envoyer un rapport"
+                        title="Envoyer un rapport de stage à votre entreprise de stage"
                         class="w-[150px] text-sm bg-blue-700 rounded md:bg-transparent text-[#EDEDEF] md:p-0 btn-link font-normal"
+                        @click.prevent="openSendReportModal(studentInternShip)"
                         aria-current="page"
                     >
                         Envoyer un rapport
@@ -202,6 +234,14 @@
             <br />
             <Pagination class="justify-end" :links="candidacies.links" />
         </div>
+
+        <Teleport to="body">
+            <SendReportForm
+                :show="showSendReportModal"
+                :student-intern-ship-id="selectedStudentInternShip?.id"
+                @update-send-report-modal="updateSendReportModalStatus"
+            />
+        </Teleport>
     </div>
 </template>
 
@@ -215,6 +255,8 @@ import { Link as InertiaLink } from "@inertiajs/vue3";
 import { defineAsyncComponent } from "vue";
 import { throttle, pickBy } from "lodash";
 import useDateUtilities from "@/Composables/dateUtilities.js";
+import SendReportForm from "@/Shared/Forms/SendReportForm.vue";
+import isNil from 'lodash/isNil';
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
@@ -239,6 +281,7 @@ export default {
         InertiaLink,
         FilterButton,
         ConfirmationDialog,
+        SendReportForm,
     },
 
     layout: StudentLayout,
@@ -255,8 +298,8 @@ export default {
         studentInternShip: {
             type: Object,
             default() {
-                return {}
-            }
+                return {};
+            },
         },
 
         status: {
@@ -270,7 +313,7 @@ export default {
     setup() {
         const { formatDate } = useDateUtilities();
 
-        return { formatDate };
+        return { formatDate, isNil };
     },
 
     data() {
@@ -288,6 +331,8 @@ export default {
                 "Status",
             ],
 
+            selectedStudentInternShip: null,
+            showSendReportModal: false,
             showFilters: false,
         };
     },
@@ -303,7 +348,41 @@ export default {
         },
     },
 
-    methods: {},
+    methods: {
+        openSendReportModal(studentInternShip) {
+            this.selectedStudentInternShip = studentInternShip;
+            this.openModal();
+        },
+
+        rapportStatus(studentInternShip){
+            if(isNil(studentInternShip?.file_associated_uuid)) {
+
+                return "Pas envoyé";
+
+            }else {
+
+                if (isNil(studentInternShip?.is_intern_ship_valid)) {
+
+                    return "En attente de validation";
+                }
+
+                if (studentInternShip?.is_intern_ship_valid === true){
+
+                    return "Validé";
+                }
+
+                return "Rejété";
+            }
+        },
+
+        openModal() {
+            this.showSendReportModal = true;
+        },
+
+        updateSendReportModalStatus(newStatus) {
+            this.showSendReportModal = newStatus;
+        },
+    },
 };
 </script>
 

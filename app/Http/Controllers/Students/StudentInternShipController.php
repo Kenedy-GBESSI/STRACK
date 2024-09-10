@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Students;
 
+use App\Data\File\FileData;
 use App\Enums\InternshipStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Candidacies\ToApplyOfferRequest;
 use App\Models\Offer;
 use App\Models\Student;
 use App\Models\StudentInternShip;
+use App\Services\StudentInternShip\StudentInternShipService;
 use App\Traits\InteractsWithAlert;
 use Carbon\Carbon;
 
@@ -38,5 +41,17 @@ class StudentInternShipController extends Controller
 
             $this->warningAlert("Cette offre n'est liée à aucune campagne de stage en cours. Vous pouvez contacter l'entreprise pour un entretien post plateforme !");
         }
+    }
+
+    public function saveRapportFile(ToApplyOfferRequest $request, StudentInternShip $studentInternShip)
+    {
+        $request->whenFilled('fileData', function (array $fileData) use ($studentInternShip) {
+            (new StudentInternShipService)->saveFile($studentInternShip, FileData::from($fileData));
+        });
+
+        $this->alert('Le rapport a bien été envoyé à votre entreprise de stage!');
+
+        return back();
+
     }
 }

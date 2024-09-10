@@ -23,6 +23,11 @@ class Company extends Model
         return $this->hasMany(Offer::class);
     }
 
+    public function studentInternShips(): HasMany
+    {
+        return $this->hasMany(StudentInternShip::class);
+    }
+
     /**
      * Scope a query to only include models based on search.
      *

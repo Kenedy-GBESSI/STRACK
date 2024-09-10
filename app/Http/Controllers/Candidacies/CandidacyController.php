@@ -89,13 +89,14 @@ class CandidacyController extends Controller
 
     public function validateCandidacy(Candidacy $candidacy)
     {
+        $student = $candidacy->student;
+
         $candidacy->update([
             'status' => PartnershipStatus::VALIDATED_PARTNERSHIP->value
         ]);
 
-        $student = $candidacy->student;
+        if( $student->internship_status === InternshipStatus::ON_INTERNSHIP->value) {
 
-        if( $student->internship_status === InternshipStatus::ON_INTERNSHIP) {
 
             $this->warningAlert('Le candidat est déjà en stage mais il pourra récevoir votre réponse et vous écrira !');
 

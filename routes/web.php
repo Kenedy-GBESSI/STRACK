@@ -3,6 +3,7 @@
 use App\Http\Controllers\Candidacies\CandidacyController;
 use App\Http\Controllers\Companies\CompanyController;
 use App\Http\Controllers\Companies\CompanyRegisterController;
+use App\Http\Controllers\Companies\StudentInternController;
 use App\Http\Controllers\Files\SystemFilePondController;
 use App\Http\Controllers\InternShips\InternShipController;
 use App\Http\Controllers\Offers\OfferController;
@@ -82,6 +83,11 @@ Route::middleware([
         Route::get('candidacies/{candidacy}', [CandidacyController::class, 'showCandidacy'])->name('candidacies.show');
         Route::post('/candidacies/{candidacy}/reject', [CandidacyController::class, 'rejectCandidacy'])->name('candidacies.reject-company');
         Route::post('/candidacies/{candidacy}/validate', [CandidacyController::class, 'validateCandidacy'])->name('candidacies.validate-company');
+
+
+        // Interns
+        Route::get('interns', [StudentInternController::class, 'getInternsForCompany'])->name('interns');
+        Route::get('interns/{student_intern_ship}', [StudentInternController::class, 'showIntern'])->name('interns.show');
     });
 
     Route::middleware(['checkProfileType:App\Models\Student'])->group(function () {
@@ -92,6 +98,8 @@ Route::middleware([
         Route::post('/apply-to-offer/{student}/{offer}', [CandidacyController::class, 'toApplyOffer'])->name('students.to-apply-offer');
 
         Route::get('/start-intern-ship/{student}/{offer}', [StudentInternShipController::class, 'startInternShip'])->name('students.start-intern-ship');
+
+        Route::post('/student-intern-ship/{student_intern_ship}/rapport', [StudentInternShipController::class, 'saveRapportFile'])->name('students.send-rapport');
 
     });
 

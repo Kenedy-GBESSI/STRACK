@@ -7,6 +7,7 @@ use App\Data\File\FileResponseHeadersData;
 use App\Models\Candidacy;
 use App\Models\InternShip;
 use App\Models\Offer;
+use App\Models\StudentInternShip;
 use App\Services\Files\FileMimeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -34,6 +35,12 @@ class SystemFilePondController extends Controller
         if (! $file) {
             $file = Candidacy::where('file_associated_name', $request->restore)->first();
             $disk = Candidacy::relatedFileDisk();
+            $path = $file?->file_associated_path;
+        }
+
+        if (! $file) {
+            $file = StudentInternShip::where('file_associated_name', $request->restore)->first();
+            $disk = StudentInternShip::relatedFileDisk();
             $path = $file?->file_associated_path;
         }
 

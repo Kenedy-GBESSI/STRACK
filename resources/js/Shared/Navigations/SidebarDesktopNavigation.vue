@@ -139,6 +139,24 @@
 
                             Candidatures
                         </InertiaLink>
+
+                        <InertiaLink
+                            v-if="$page.props.auth.user.role === 'Company'"
+                            :href="route('interns')"
+                            class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
+                            :class="
+                                isUrl('interns')
+                                    ? 'border-l-2 border-white  bg-[#268FF2]'
+                                    : ''
+                            "
+                        >
+                            <FontAwesomeIcon
+                                size="fa-lg"
+                                class="mr-4 flex-shrink-0 h-6 w-6 text-white group-hover:text-white fa-light fa-users"
+                            />
+
+                            Stagiaires
+                        </InertiaLink>
                     </nav>
                 </div>
 

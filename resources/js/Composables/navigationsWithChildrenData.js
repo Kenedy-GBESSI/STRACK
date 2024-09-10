@@ -24,6 +24,10 @@ export default function useNavigationsData() {
             name: "Candidatures",
             englishName: "candidacies",
         },
+        {
+            name: "Stagiaires",
+            englishName: "interns",
+        },
     ];
 
     return { navigationsWithChildren };

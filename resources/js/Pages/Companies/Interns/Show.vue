@@ -1,0 +1,147 @@
+<template>
+    <div class="px-4 py-4 sm:px-6 md:px-8 md:py-8">
+        <div class="flex flex-col bg-[#FFFFFF]">
+            <div class="flex flex-col p-6">
+                <div class="flex flex-col space-y-4">
+                    <div
+                        class="flex sm:space-x-6 sm:space-y-0 space-x-1 space-y-4 px-4 flex-wrap sm:items-start items-center"
+                    >
+                        <InertiaLink
+                            :href="route('interns')"
+                            class="flex justify-center items-center w-10 h-10 rounded-full bg-[#F4F4F4]"
+                        >
+                            <FontAwesomeIcon
+                                size="fa-lg"
+                                class="flex-shrink-0 h-5 w-5 fa-light fa-arrow-left text-[#808080]"
+                            />
+                        </InertiaLink>
+                        <div>
+                            <h1 class="font-bold text-2xl leading-8">
+                                Stagiaire
+                                {{ intern?.student?.user?.full_name }}
+                            </h1>
+                            <p class="font-medium text-[#525252] leading-6">
+                                {{ intern?.student?.matriculation_number }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <ul class="flex flex-col">
+
+                        <li
+                            class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                        >
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Matricule de l'étudiant :
+                            </p>
+                            <p
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                            >
+                                {{ intern?.student?.matriculation_number }}
+                            </p>
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Nom de l'étudiant :
+                            </p>
+                            <p
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                            >
+                                {{ intern?.student?.user?.last_name }}
+                            </p>
+                        </li>
+                        <li
+                            class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                        >
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Prénom de l'étudiant :
+                            </p>
+                            <p
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                            >
+                                {{ intern?.student?.user?.first_name }}
+                            </p>
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Filière de l'étudiant :
+                            </p>
+                            <p
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                            >
+                                {{ intern?.student?.study_field }}
+                            </p>
+                        </li>
+                        <li
+                            class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                        >
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Année de l'étudiant :
+                            </p>
+                            <p
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                            >
+                                {{ intern?.student?.academic_year }}
+                            </p>
+                        </li>
+                        <li
+                            v-if="intern?.fileData"
+                            class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                        >
+                        <p class="font-semibold pb-4">Rapport de l'étudiant</p>
+                            <FileManager
+                                class="w-full"
+                                :attached-files="intern?.fileData ?? []"
+                                label-idle="AUCUN RAPPORT"
+                                :allow-multiple="false"
+                                :allow-image-prewiew="true"
+                                :disabled="true"
+                            />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import AppLayout from "@/Layouts/AppLayout.vue";
+import { Link as InertiaLink } from "@inertiajs/vue3";
+import FileManager from "@/Shared/FileManager.vue";
+import { defineAsyncComponent } from "vue";
+
+const FontAwesomeIcon = defineAsyncComponent({
+    loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
+});
+
+export default {
+    components: {
+        InertiaLink,
+        FontAwesomeIcon,
+        FileManager,
+    },
+
+    layout: AppLayout,
+    props: {
+        intern: Object,
+    },
+
+    data() {
+        return {
+            warningDelete: false,
+            deleteString: "",
+        };
+    },
+    methods: {},
+};
+</script>
+
+<style scoped>
+</style>
