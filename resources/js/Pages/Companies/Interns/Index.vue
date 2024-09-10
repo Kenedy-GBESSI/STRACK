@@ -37,6 +37,11 @@
                                 {{ intern.intern_ship?.title ?? "-" }}
                             </td>
                             <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                {{ intern.company_note ?? "-" }}
+                            </td>
+                            <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium cursor-pointer"
                             >
                                 <Dropdown :overlay="false" direction="right">
@@ -78,6 +83,7 @@
                                                 <button
                                                     title="Noter le stagiaire"
                                                     class="text-sm font-semibold text-[#268FF2] w-full text-left"
+                                                    @click.prevent="openAddNoteModal(intern)"
                                                 >
                                                     <FontAwesomeIcon
                                                         size="fa-lg"
@@ -108,21 +114,11 @@
             <Pagination class="justify-end" :links="interns.links" />
         </div>
         <Teleport to="body">
-            <ConfirmationDialog
-                v-if="showRejectModal"
-                :message="dialogRejectBox.message"
-                :title="'Confirmer le reject'"
-                :show="showRejectModal"
-                @confirm="confirmRejectModal()"
-                @close="closeRejectModal()"
-            />
-            <ConfirmationDialogSuccess
-                v-if="showValidateModal"
-                :message="dialogValidateBox.message"
-                :title="'Confirmer la validation'"
-                :show="showValidateModal"
-                @confirm="confirmValidateModal()"
-                @close="closeValidateModal()"
+            <AddNoteForm
+               v-if="showNoteModal"
+               :show="showNoteModal"
+               @close="closeAddNoteModal()"
+               @confirm="confirmAddNoteModal"
             />
         </Teleport>
     </div>
@@ -135,15 +131,13 @@ import FilterButton from "@/Shared/Forms/FilterButton.vue";
 import TableHead from "@/Shared/Tables/TableHead.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import { Link as InertiaLink } from "@inertiajs/vue3";
+import AddNoteForm from "@/Shared/Forms/AddNoteForm.vue";
 import { defineAsyncComponent } from "vue";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
 });
 
-const ConfirmationDialog = defineAsyncComponent({
-    loader: () => import("@/Shared/ConfirmationDialog.vue"),
-});
 
 const ConfirmationDialogSuccess = defineAsyncComponent({
     loader: () => import("@/Shared/ConfirmationDialogSuccess.vue"),
@@ -163,7 +157,7 @@ export default {
         Dropdown,
         InertiaLink,
         FilterButton,
-        ConfirmationDialog,
+        AddNoteForm,
         ConfirmationDialogSuccess,
     },
 
@@ -185,7 +179,11 @@ export default {
                 "Filière Étudiant",
                 "Année Étudiant",
                 "Stage",
+                "Note attribuée"
             ],
+
+            showNoteModal: false,
+            selectedIntern: null,
         };
     },
 
@@ -194,6 +192,22 @@ export default {
     },
 
     methods: {
+        confirmAddNoteModal(note){
+            this.closeAddNoteModal();
+            this.$inertia.post(`/company-note-for-intern/${this.selectedIntern?.id}`, {
+                note: note
+            });
+        },
+
+        openAddNoteModal(intern) {
+            this.selectedIntern = intern;
+            this.showNoteModal = true;
+        },
+
+        closeAddNoteModal(){
+            this.showNoteModal = false;
+
+        }
     },
 };
 </script>

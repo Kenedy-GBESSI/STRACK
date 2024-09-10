@@ -88,6 +88,9 @@ Route::middleware([
         // Interns
         Route::get('interns', [StudentInternController::class, 'getInternsForCompany'])->name('interns');
         Route::get('interns/{student_intern_ship}', [StudentInternController::class, 'showIntern'])->name('interns.show');
+        Route::post('company-note-for-intern/{student_intern_ship}', [StudentInternController::class, 'gradeIntern'])->name('interns.update-note');
+        Route::post('/intern/{student_intern_ship}/reject-rapport-file', [StudentInternController::class, 'rejectRapportFile'])->name('interns.reject-rapport-file');
+        Route::post('/intern/{student_intern_ship}/validate-rapport-file', [StudentInternController::class, 'validateRapportFile'])->name('interns.validate-rapport-file');
     });
 
     Route::middleware(['checkProfileType:App\Models\Student'])->group(function () {

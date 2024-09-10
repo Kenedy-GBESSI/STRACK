@@ -24,10 +24,14 @@
                                 {{ intern?.student?.matriculation_number }}
                             </p>
                         </div>
+                        <span
+                            class="flex justify-center items-center w-[110px] h-8 font-bold text-lg border border-[#145ee080] rounded-[24px] bg-[#E8F0FF] text-[#145EE0]"
+                        >
+                            Note: {{ intern?.company_note ?? "-" }}
+                        </span>
                     </div>
 
                     <ul class="flex flex-col">
-
                         <li
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
@@ -94,7 +98,9 @@
                             v-if="intern?.fileData"
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
-                        <p class="font-semibold pb-4">Rapport de l'étudiant</p>
+                            <p class="font-semibold pb-4">
+                                Rapport de l'étudiant
+                            </p>
                             <FileManager
                                 class="w-full"
                                 :attached-files="intern?.fileData ?? []"
@@ -108,17 +114,63 @@
                 </div>
             </div>
         </div>
+        <div>
+            <div class="py-4 flex justify-start items-center">
+                <PrimaryButton
+                    v-if="intern?.is_intern_ship_valid !== false"
+                    class="inline-flex items-center py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white bg-red-500 hover:bg-red-700 active:bg-red-900"
+                    @click.prevent="openInvalidModal"
+                >
+                    Invalider le rapport de stage
+                </PrimaryButton>
+
+                <PrimaryButton
+                    v-if="intern?.is_intern_ship_valid !== true"
+                    type="submit"
+                    @click.prevent="openValidModal"
+                >
+                    Valider le rapport de stage
+                </PrimaryButton>
+            </div>
+        </div>
+        <Teleport to="body">
+            <ConfirmationDialog
+                v-if="showInvalidModal"
+                :message="dialogInvalidBox.message"
+                :title="'Confirmer l\'invalidation'"
+                :show="showInvalidModal"
+                @confirm="confirmInvalidModal()"
+                @close="closeInvalidModal()"
+            />
+            <ConfirmationDialogSuccess
+                v-if="showValidModal"
+                :message="dialogValidBox.message"
+                :title="'Confirmer la validation'"
+                :show="showValidModal"
+                @confirm="confirmValidModal()"
+                @close="closeValidModal()"
+            />
+        </Teleport>
     </div>
 </template>
 
 <script>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link as InertiaLink } from "@inertiajs/vue3";
 import FileManager from "@/Shared/FileManager.vue";
 import { defineAsyncComponent } from "vue";
+import { Link as InertiaLink } from "@inertiajs/vue3";
+import PrimaryButton from "@/Shared/PrimaryButton.vue";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
+});
+
+const ConfirmationDialog = defineAsyncComponent({
+    loader: () => import("@/Shared/ConfirmationDialog.vue"),
+});
+
+const ConfirmationDialogSuccess = defineAsyncComponent({
+    loader: () => import("@/Shared/ConfirmationDialogSuccess.vue"),
 });
 
 export default {
@@ -126,6 +178,9 @@ export default {
         InertiaLink,
         FontAwesomeIcon,
         FileManager,
+        PrimaryButton,
+        ConfirmationDialog,
+        ConfirmationDialogSuccess,
     },
 
     layout: AppLayout,
@@ -135,13 +190,48 @@ export default {
 
     data() {
         return {
-            warningDelete: false,
-            deleteString: "",
+            showInvalidModal: false,
+            dialogInvalidBox: {
+                message: "",
+            },
+
+            showValidModal: false,
+            dialogValidBox: {
+                message: "",
+            },
         };
     },
-    methods: {},
+    methods: {
+        openInvalidModal() {
+            this.dialogInvalidBox.message = `Êtes-vous sûr de vouloir invalider le rapport du stagiaire "${this.intern?.student?.user?.full_name}" ?`;
+            this.showInvalidModal = true;
+        },
+
+        openValidModal() {
+            this.dialogValidBox.message = `Êtes-vous sûr de vouloir valider le rapport du stagiaire "${this.intern?.student?.user?.full_name}" ?`;
+            this.showValidModal = true;
+        },
+
+        confirmInvalidModal() {
+            this.showInvalidModal = false;
+            this.$inertia.post(`/intern/${this.intern.id}/reject-rapport-file`);
+        },
+
+        confirmValidModal() {
+            this.showValidModal = false;
+            this.$inertia.post(`/intern/${this.intern.id}/validate-rapport-file`);
+        },
+
+        closeInvalidModal() {
+            this.showInvalidModal = false;
+        },
+
+        closeValidModal() {
+            this.showValidModal = false;
+        },
+
+    },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
