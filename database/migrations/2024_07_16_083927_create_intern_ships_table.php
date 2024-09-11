@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('intern_ships', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->date('start_date');
             $table->date('end_date');
             $table->string('academic_year');
