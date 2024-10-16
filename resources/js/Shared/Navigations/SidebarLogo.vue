@@ -16,7 +16,7 @@
         </div>
         <div class="text-white">
           <p v-if="$page.props.auth.user.role === 'Institute'" class="font-bold">ADMINISTRATION IFRI</p>
-          <p v-else class="font-bold">ENTREPRISE {{ $page.props.auth.user?.profile?.company_name }}</p>
+          <p  v-if="$page.props.auth.user.role === 'Company'" class="font-bold">ENTREPRISE {{ $page.props.auth.user?.profile?.company_name }}</p>
         </div>
     </InertiaLink>
 </template>

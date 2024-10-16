@@ -33,7 +33,9 @@
                             />
 
                             <!-- Télécharger -->
-                            <ExportButton />
+                            <ExportButton
+                                @export-data-to-excel="onExportDataToExcel"
+                            />
                         </div>
                     </div>
                 </div>
@@ -304,7 +306,7 @@ export default {
         FilterButton,
         ConfirmationDialog,
         PrimaryButton,
-        ImportStudentForm
+        ImportStudentForm,
     },
 
     layout: AppLayout,
@@ -393,6 +395,12 @@ export default {
 
         close() {
             this.showModal = false;
+        },
+
+        onExportDataToExcel() {
+            window.location = this.route("students.export", pickBy(this.form), {
+                preserveState: true,
+            });
         },
     },
 };
