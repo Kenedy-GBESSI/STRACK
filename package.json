@@ -38,6 +38,7 @@
         "luxon": "^3.5.0",
         "uuid": "^9.0.1",
         "vue-filepond": "^7.0.4",
-        "vue-flatpickr-component": "^11.0.5"
+        "vue-flatpickr-component": "^11.0.5",
+        "xlsx": "^0.18.5"
     }
 }

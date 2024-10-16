@@ -106,7 +106,10 @@
                             Stages
                         </InertiaLink>
                         <InertiaLink
-                            v-if="$page.props.auth.user.role === 'Company'"
+                            v-if="
+                                $page.props.auth.user.role === 'Company' ||
+                                $page.props.auth.user.role === 'Institute'
+                            "
                             :href="route('offers.index')"
                             class="group w-full text-[#F6F6F6] flex items-center h-12 pl-4 py-3 text-sm font-semibold hover:bg-[#268FF2]"
                             :class="

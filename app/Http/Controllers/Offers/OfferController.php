@@ -29,7 +29,7 @@ class OfferController extends Controller
             'filters' => fn() => $request->all('search'),
             'offers' => fn() => Offer::query()
                 ->where('company_id', Auth::user()->profile_id)
-                ->with('internShip')
+                ->with('internShip', 'company')
                 ->filter(request()->only('search'))
                 ->orderBy('title', 'asc')
                 ->paginate(config('custom.records_per_page'))

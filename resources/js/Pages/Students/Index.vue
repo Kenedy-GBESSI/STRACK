@@ -1,6 +1,17 @@
 <template>
     <div class="px-4 py-4 sm:px-6 md:px-8 md:py-8">
         <div class="flex flex-col bg-[#FFFFFF] p-4 rounded-lg">
+            <div class="flex w-full justify-start">
+                <PrimaryButton
+                    type="submit"
+                    title="Importer un fichier excel des étudiants qui ne figurent pas encore sur la plateforme"
+                    class="ml-0 flex space-x-2 sm:w-auto w-full"
+                    @click="showImportItemModal = true"
+                >
+                    <span>Importer la liste des étudiants</span>
+                    <FontAwesomeIcon size="fa-light fa-file-import" />
+                </PrimaryButton>
+            </div>
             <div class="py-2 align-middle inline-block w-full">
                 <div
                     class="mb-4 flex flex-row content items-center justify-between"
@@ -246,6 +257,12 @@
                 @close="close()"
             />
         </Teleport>
+
+        <ImportStudentForm
+            v-if="showImportItemModal"
+            :open-full-screen-modal="showImportItemModal"
+            @update-full-screen-modal-status="onImportItemModal"
+        />
     </div>
 </template>
 
@@ -259,6 +276,8 @@ import Dropdown from "@/Components/Dropdown.vue";
 import { Link as InertiaLink } from "@inertiajs/vue3";
 import { defineAsyncComponent } from "vue";
 import { throttle, pickBy } from "lodash";
+import PrimaryButton from "@/Shared/PrimaryButton.vue";
+import ImportStudentForm from "@/Shared/Forms/ImportStudentForm.vue";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
@@ -284,6 +303,8 @@ export default {
         InertiaLink,
         FilterButton,
         ConfirmationDialog,
+        PrimaryButton,
+        ImportStudentForm
     },
 
     layout: AppLayout,
@@ -319,6 +340,8 @@ export default {
                 study_field: this.filters.study_field,
                 internship_status: this.filters.internship_status,
             },
+
+            showImportItemModal: false,
 
             tableHeader: [
                 "Matricule",
@@ -362,6 +385,10 @@ export default {
         confirm() {
             this.showModal = false;
             this.$inertia.delete(`/students/${this.selectedStudent.id}`);
+        },
+
+        onImportItemModal(newStatus) {
+            this.showImportItemModal = newStatus;
         },
 
         close() {

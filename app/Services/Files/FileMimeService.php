@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Files;
 
+use App\Data\File\FileData;
 use App\Data\File\FileResponseHeadersData;
 use Illuminate\Support\Str;
 use Sopamo\LaravelFilepond\Filepond;
@@ -73,5 +74,12 @@ class FileMimeService
             'content_type' => self::mime2ext($file_extension),
         ]);
 
+    }
+
+    public function getPath(FileData $fileData): string
+    {
+        $filepond = app(Filepond::class);
+
+        return $filepond->getPathFromServerId($fileData->server_id);
     }
 }

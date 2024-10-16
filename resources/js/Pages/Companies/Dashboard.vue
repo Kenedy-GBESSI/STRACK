@@ -1,5 +1,35 @@
 <template>
-    <div class="m-4">
+    <div
+        v-if="
+            $page.props.auth.user.role === 'Company' &&
+            $page.props.auth.user.profile?.partnership_status !== 'Validé'
+        "
+        class="w-full flex my-8 justify-center items-center"
+    >
+        <div
+            class="xl:w-[913px] w-[87%] xl:px-2 px-3 flex space-x-[8px] bg-[#F9FBFF] xl:rounded-[32px] rounded-[100px] border border-red-500 xl:h-[66px] h-[68px] xl:py-1 py-2 items-center justify-center"
+        >
+            <span
+                v-if="
+                    $page.props.auth.user.profile?.partnership_status ===
+                    'Nouveau'
+                "
+                class="font-semibold sm:text-[24px] text-[13px] text-red-400"
+                >Veuillez attendre ! Vous êtes en attente de validation...</span
+            >
+            <span
+                v-if="
+                    $page.props.auth.user.profile?.partnership_status ===
+                    'Rejeté'
+                "
+                class="font-semibold sm:text-[24px] text-[13px] text-red-400"
+                >Compte réjeté ! Votre entreprise ne répond pas aux normes
+                d'IFRI</span
+            >
+        </div>
+    </div>
+
+    <div v-else class="m-4">
         <h1 class="text-[#111827] text-2xl font-bold">Statistiques</h1>
         <div class="flex lg:flex-row flex-col gap-4 w-full py-4 flex-wrap">
             <CardStatistic
@@ -172,10 +202,6 @@ export default {
                         innerSize: "80%",
                         data: [
                             {
-                                name: "Sans stage",
-                                y: 25,
-                            },
-                            {
                                 name: "Fin stage",
                                 y: 50,
                             },
@@ -260,49 +286,31 @@ export default {
                 {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#237AE0]",
-                    name: "Tous les étudiants",
-                    value: 3000,
-                },
-                {
-                    icon: "fa-light fa-users",
-                    bgColorStyle: "bg-[#F57373]",
-                    name: "Étudiants en stage",
-                    value: 3000,
-                },
-                {
-                    icon: "fa-light fa-users",
-                    bgColorStyle: "bg-[#F89500]",
-                    name: "Étudiants sans stage",
+                    name: "Tous les stagiaires",
                     value: 3000,
                 },
                 {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#4B9F08]",
-                    name: "Etudiants en fin de stage",
+                    name: "Stagiaires en fin de stage",
                     value: 3000,
-                },
-                {
-                    icon: "fa-light fa-university",
-                    bgColorStyle: "bg-[#6733FF]",
-                    name: "Les entreprises",
-                    value: 5000,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#237AE0]",
-                    name: "Toutes les offres",
+                    name: "Toutes mes offres",
                     value: 3000,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#F89500]",
-                    name: "Offres en cours",
+                    name: "Mes offres en cours",
                     value: 3000,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#D70027]",
-                    name: "Offres expirées",
+                    name: "Mes offres expirées",
                     value: 3000,
                 },
             ],

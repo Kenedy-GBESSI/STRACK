@@ -62,9 +62,7 @@
                         </div>
                         <nav class="mt-5 px-2 space-y-1" aria-label="Sidebar">
                             <InertiaLink
-                                v-if="
-                                    $page.props.auth.user.role === 'Company'
-                                "
+                                v-if="$page.props.auth.user.role === 'Company'"
                                 :href="route('company.dashboard')"
                                 class="group text-white w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md"
                                 :class="
@@ -165,7 +163,10 @@
                                 Stages
                             </InertiaLink>
                             <InertiaLink
-                                v-if="$page.props.auth.user.role === 'Company'"
+                                v-if="
+                                    $page.props.auth.user.role === 'Company' ||
+                                    $page.props.auth.user.role === 'Institute'
+                                "
                                 :href="route('offers.index')"
                                 class="group text-white w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md"
                                 :class="
@@ -201,9 +202,7 @@
                                 Candidatures
                             </InertiaLink>
                             <InertiaLink
-                                v-if="
-                                    $page.props.auth.user.role === 'Company'
-                                "
+                                v-if="$page.props.auth.user.role === 'Company'"
                                 :href="route('interns')"
                                 class="group text-white w-full flex items-center pl-2 py-2 text-sm font-medium rounded-md"
                                 :class="

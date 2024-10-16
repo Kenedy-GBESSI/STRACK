@@ -53,6 +53,9 @@ Route::middleware([
     // InternShips
     Route::resource('intern-ships', InternShipController::class);
 
+    // Offers
+    Route::resource('offers', OfferController::class);
+
     Route::middleware(['checkProfileType:App\Models\Institute'])->group(function () {
 
         Route::get('dashboard', function () {
@@ -75,9 +78,6 @@ Route::middleware([
             return Inertia::render('Companies/Dashboard');
         })->name('company.dashboard');
 
-
-        // Offers
-        Route::resource('offers', OfferController::class);
 
         // Candidacies
         Route::get('candidacies', [CandidacyController::class, 'getCandidaciesForCompany'])->name('candidacies');

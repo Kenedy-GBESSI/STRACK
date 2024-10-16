@@ -181,7 +181,7 @@
             </ul>
         </div>
         <div>
-            <div class="mb-4 flex justify-start items-center">
+            <div class="my-4 flex justify-start items-center">
                 <PrimaryButton
                     type="submit"
                     @click.prevent="openAddNoteModal"

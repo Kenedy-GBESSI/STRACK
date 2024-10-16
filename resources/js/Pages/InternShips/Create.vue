@@ -1,5 +1,35 @@
 <template>
-    <div class="px-4 py-4 sm:px-6 md:px-8 md:py-8">
+    <div
+        v-if="
+            $page.props.auth.user.role === 'Company' &&
+            $page.props.auth.user.profile?.partnership_status !== 'Validé'
+        "
+        class="w-full flex my-8 justify-center items-center"
+    >
+        <div
+            class="xl:w-[913px] w-[87%] xl:px-2 px-3 flex space-x-[8px] bg-[#F9FBFF] xl:rounded-[32px] rounded-[100px] border border-red-500 xl:h-[66px] h-[68px] xl:py-1 py-2 items-center justify-center"
+        >
+            <span
+                v-if="
+                    $page.props.auth.user.profile?.partnership_status ===
+                    'Nouveau'
+                "
+                class="font-semibold sm:text-[24px] text-[13px] text-red-400"
+                >Veuillez attendre ! Vous êtes en attente de validation...</span
+            >
+            <span
+                v-if="
+                    $page.props.auth.user.profile?.partnership_status ===
+                    'Rejeté'
+                "
+                class="font-semibold sm:text-[24px] text-[13px] text-red-400"
+                >Compte réjeté ! Votre entreprise ne répond pas aux normes
+                d'IFRI</span
+            >
+        </div>
+    </div>
+
+    <div v-else class="px-4 py-4 sm:px-6 md:px-8 md:py-8">
         <div class="flex flex-col bg-[#FFFFFF]">
             <div class="flex flex-col p-6">
                 <div class="flex flex-col space-y-4">
@@ -86,9 +116,7 @@
                                         </Multiselect>
                                         <InputError
                                             class="mt-2"
-                                            :message="
-                                                form.errors.academic_year
-                                            "
+                                            :message="form.errors.academic_year"
                                         />
                                     </div>
                                     <div class="pb-4 pr-6 w-full flex flex-col">
@@ -188,10 +216,9 @@ export default {
         academicYears: {
             type: Array,
             default() {
-                return []
-            }
-        }
-
+                return [];
+            },
+        },
     },
 
     setup() {

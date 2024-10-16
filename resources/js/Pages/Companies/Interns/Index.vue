@@ -1,5 +1,35 @@
 <template>
-    <div class="px-4 py-4 sm:px-6 md:px-8 md:py-8">
+    <div
+        v-if="
+            $page.props.auth.user.role === 'Company' &&
+            $page.props.auth.user.profile?.partnership_status !== 'Validé'
+        "
+        class="w-full flex my-8 justify-center items-center"
+    >
+        <div
+            class="xl:w-[913px] w-[87%] xl:px-2 px-3 flex space-x-[8px] bg-[#F9FBFF] xl:rounded-[32px] rounded-[100px] border border-red-500 xl:h-[66px] h-[68px] xl:py-1 py-2 items-center justify-center"
+        >
+            <span
+                v-if="
+                    $page.props.auth.user.profile?.partnership_status ===
+                    'Nouveau'
+                "
+                class="font-semibold sm:text-[24px] text-[13px] text-red-400"
+                >Veuillez attendre ! Vous êtes en attente de validation...</span
+            >
+            <span
+                v-if="
+                    $page.props.auth.user.profile?.partnership_status ===
+                    'Rejeté'
+                "
+                class="font-semibold sm:text-[24px] text-[13px] text-red-400"
+                >Compte réjeté ! Votre entreprise ne répond pas aux normes
+                d'IFRI</span
+            >
+        </div>
+    </div>
+
+    <div v-else class="px-4 py-4 sm:px-6 md:px-8 md:py-8">
         <div class="flex flex-col bg-[#FFFFFF] p-4 rounded-lg">
             <div class="overflow-x-auto max-h-[60vh] no-scrollbar">
                 <table class="min-w-full table-fixed divide-y divide-gray-300">

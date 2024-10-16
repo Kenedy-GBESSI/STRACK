@@ -1,11 +1,11 @@
 <template>
-    <div class="cursor-pointer">
+    <div>
         <FilePond
             name="file"
             :label-idle="labelIdle"
             :allow-multiple="allowMultiple"
             :allow-image-preview="allowImagePrewiew"
-            :required="false"
+            :required="isRequired"
             :disabled="disabled"
             :accepted-file-types="acceptedFileTypes"
             :server="serverOptions"
@@ -16,17 +16,15 @@
             @removefile="removeFile"
             @addfile="addFile"
         />
-        <Teleport to="body">
-            <ConfirmationDialog
-                v-if="showConfirmationModal"
-                :message="message"
-                :title="title"
-                :show="show.default"
-                :closeable="closeable"
-                @confirm="confirm()"
-                @close="close()"
-            />
-        </Teleport>
+        <ConfirmationDialog
+            v-if="showConfirmationModal"
+            :message="message"
+            :title="title"
+            :show="show.default"
+            :closeable="closeable"
+            @confirm="confirm()"
+            @close="close()"
+        />
     </div>
 </template>
 
@@ -48,7 +46,7 @@ const FilePond = vueFilePond(
     FilePondPluginImageOverlay,
     FilePondPluginGetFile,
     FilePondPluginFileValidateSize,
-    FilePondPluginImagePreview,
+    FilePondPluginImagePreview
 );
 
 export default {
@@ -67,6 +65,16 @@ export default {
         },
 
         allowImagePrewiew: {
+            type: Boolean,
+            default: false,
+        },
+
+        isRequired: {
+            type: Boolean,
+            default: false,
+        },
+
+        isExcelFile: {
             type: Boolean,
             default: false,
         },
@@ -93,7 +101,7 @@ export default {
         },
     },
 
-    emits: ["updateFiles", "update:attachedFiles"],
+    emits: ["updateFiles", "update:attachedFiles", "selectedExcelFile"],
 
     data() {
         return {
@@ -153,9 +161,15 @@ export default {
                     break;
                 }
             }
+            this.$emit("selectedExcelFile", null);
         },
 
-        addFile() {},
+        addFile(error, file) {
+            if (!error && file && this.isExcelFile) {
+                this.$emit("selectedExcelFile", file.file);
+            }
+        },
+
         async beforeRemove() {
             this.title = "Confirmation de suppression";
             this.message = "Êtes-vous sûr de vouloir supprimer ce fichier?";
