@@ -25,15 +25,24 @@ class OfferController extends Controller
      */
     public function index(Request $request)
     {
+        $query = Offer::query()
+            ->with('internShip', 'company')
+            ->filter(request()->only('search'));
+
+        $offers = Auth::user()->role === 'Institute'
+            ? $query
+            ->orderBy('title', 'asc')
+            ->paginate(config('custom.records_per_page'))
+            ->withQueryString()
+            : $query
+            ->where('company_id', Auth::user()->profile_id)
+            ->orderBy('title', 'asc')
+            ->paginate(config('custom.records_per_page'))
+            ->withQueryString();
+
         return Inertia::render('Offers/Index', [
             'filters' => fn() => $request->all('search'),
-            'offers' => fn() => Offer::query()
-                ->where('company_id', Auth::user()->profile_id)
-                ->with('internShip', 'company')
-                ->filter(request()->only('search'))
-                ->orderBy('title', 'asc')
-                ->paginate(config('custom.records_per_page'))
-                ->withQueryString()
+            'offers' => fn() => $offers
         ]);
     }
 

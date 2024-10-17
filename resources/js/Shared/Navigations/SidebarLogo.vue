@@ -16,13 +16,15 @@
         </div>
         <div class="text-white">
           <p v-if="$page.props.auth.user.role === 'Institute'" class="font-bold">ADMINISTRATION IFRI</p>
-          <p  v-if="$page.props.auth.user.role === 'Company'" class="font-bold">ENTREPRISE {{ $page.props.auth.user?.profile?.company_name }}</p>
+          <p  v-if="$page.props.auth.user.role === 'Company'" class="font-bold">{{ truncateText($page.props.auth.user?.profile?.company_name, 20) }} </p>
         </div>
     </InertiaLink>
 </template>
 
 <script>
+
 import { Link as InertiaLink } from "@inertiajs/vue3";
+import useStringUtilities from "@/Composables/stringUtilities.js";
 
 export default {
     components: {
@@ -39,6 +41,12 @@ export default {
             type: Boolean,
             default: false,
         },
+    },
+
+    setup() {
+        const { truncateText } = useStringUtilities();
+
+        return { truncateText };
     },
 };
 </script>
