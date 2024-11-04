@@ -301,7 +301,7 @@ export default {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    min-height: 100vh;
+    min-height: auto;
     overflow: hidden;
 }
 .color-content {

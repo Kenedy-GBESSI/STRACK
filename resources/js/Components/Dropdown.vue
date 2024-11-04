@@ -8,7 +8,7 @@ const props = defineProps({
     },
     width: {
         type: String,
-        default: "48",
+        default: "64",
     },
     contentClasses: {
         type: Array,
@@ -29,7 +29,7 @@ onUnmounted(() => document.removeEventListener("keydown", closeOnEscape));
 
 const widthClass = computed(() => {
     return {
-        48: "w-48",
+        64: "w-64",
     }[props.width.toString()];
 });
 
@@ -47,12 +47,11 @@ const alignmentClasses = computed(() => {
 </script>
 
 <template>
-    <div class="relative">
+    <div>
         <div @click="open = !open">
             <slot name="trigger" />
         </div>
 
-        <!-- Full Screen Dropdown Overlay -->
         <div v-show="open" class="fixed inset-0 z-40" @click="open = false" />
 
         <transition
@@ -65,7 +64,7 @@ const alignmentClasses = computed(() => {
         >
             <div
                 v-show="open"
-                class="fixed z-50 mt-2 rounded-md shadow-lg translate-x-[-25%]"
+                class="absolute z-50 mt-2 rounded-md shadow-lg -translate-x-8"
                 :class="[widthClass, alignmentClasses]"
                 style="display: none"
                 @click="open = false"

@@ -15,8 +15,8 @@
             </p>
         </div>
         <div class="text-white">
-          <p v-if="$page.props.auth.user.role === 'Institute'" class="font-bold">ADMINISTRATION IFRI</p>
-          <p  v-if="$page.props.auth.user.role === 'Company'" class="font-bold">{{ truncateText($page.props.auth.user?.profile?.company_name, 20) }} </p>
+          <p v-if="$page.props.auth.user.role === 'Institute'" class="font-bold text-center">IFRI</p>
+          <p  v-if="$page.props.auth.user.role === 'Company'" class="font-bold">{{ truncateText($page.props.auth.user?.profile?.company_name, 10) }} </p>
         </div>
     </InertiaLink>
 </template>

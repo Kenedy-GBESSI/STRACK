@@ -40,9 +40,11 @@
                     >
                         <SearchRecordsInput
                             v-model="form.search"
-                            class="relative sm:w-10/12 w-full"
+                            class="relative"
+                            :class="$page.props.auth.user.role === 'Institute' ? 'sm:w-10/12 w-full': 'w-full'"
                         />
                         <div
+                            v-if="$page.props.auth.user.role === 'Institute'"
                             class="flex sm:flex-row flex-col sm:space-x-4 sm:space-y-0 space-x-0 space-y-4 sm:w-2/12 w-full"
                         >
                             <InertiaLink

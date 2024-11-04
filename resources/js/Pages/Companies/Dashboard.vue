@@ -50,7 +50,7 @@
                                 'Ont fini les stages',
                             ]"
                             :key="index"
-                            class="h-full sm:w-3/12 w-1/2 flex justify-center items-center cursor-pointer text-[#030229]"
+                            class="h-full w-1/2 flex justify-center items-center cursor-pointer text-[#030229]"
                             :class="[
                                 indicator == index
                                     ? 'border-b-2 border-[#061A53] font-bold text-lg'

@@ -5,7 +5,7 @@
                 <PrimaryButton
                     type="submit"
                     title="Importer un fichier excel des étudiants qui ne figurent pas encore sur la plateforme"
-                    class="ml-0 flex space-x-2 sm:w-auto w-full"
+                    class="-ml-0 flex space-x-2 sm:w-auto w-full"
                     @click="showImportItemModal = true"
                 >
                     <span>Importer la liste des étudiants</span>

@@ -125,6 +125,30 @@
                             </p>
                         </li>
                         <li
+                            class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                        >
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Début de stage :
+                            </p>
+                            <p
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                            >
+                                {{ formatDate(intern?.start_date) }}
+                            </p>
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Date de fin de stage :
+                            </p>
+                            <p
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                            >
+                                {{ formatDate(intern?.end_date) }}
+                            </p>
+                        </li>
+                        <li
                             v-if="intern?.fileData"
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
@@ -144,7 +168,7 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div v-if="intern.is_intern_ship_valid">
             <div class="py-4 flex justify-start items-center">
                 <PrimaryButton
                     v-if="intern?.is_intern_ship_valid !== false"
@@ -190,6 +214,7 @@ import FileManager from "@/Shared/FileManager.vue";
 import { defineAsyncComponent } from "vue";
 import { Link as InertiaLink } from "@inertiajs/vue3";
 import PrimaryButton from "@/Shared/PrimaryButton.vue";
+import useDateUtilities from "@/Composables/dateUtilities.js";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
@@ -216,6 +241,12 @@ export default {
     layout: AppLayout,
     props: {
         intern: Object,
+    },
+
+    setup() {
+        const { formatDate } = useDateUtilities();
+
+        return { formatDate };
     },
 
     data() {
@@ -249,7 +280,9 @@ export default {
 
         confirmValidModal() {
             this.showValidModal = false;
-            this.$inertia.post(`/intern/${this.intern.id}/validate-rapport-file`);
+            this.$inertia.post(
+                `/intern/${this.intern.id}/validate-rapport-file`,
+            );
         },
 
         closeInvalidModal() {
@@ -259,7 +292,6 @@ export default {
         closeValidModal() {
             this.showValidModal = false;
         },
-
     },
 };
 </script>

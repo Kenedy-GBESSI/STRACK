@@ -20,7 +20,7 @@ return [
      *
      * @var int
      */
-    'records_per_page' => 50,
+    'records_per_page' => 5,
 
     /**
      * The default date format to use across the app.
