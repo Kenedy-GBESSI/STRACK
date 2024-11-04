@@ -13,7 +13,7 @@ export default function useNavigationsData() {
             englishName: "companies",
         },
         {
-            name: "Stages",
+            name: "Campagnes de stages",
             englishName: "intern-ships",
         },
         {

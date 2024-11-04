@@ -47,14 +47,14 @@ class CandidacyController extends Controller
     public function getCandidaciesForCompany()
     {
         return Inertia::render('Companies/Candidacies/Index', [
-            'filters' => fn() => request()->all('search', 'candidacy_status'),
+            'filters' => fn() => request()->all('search', 'candidacy_status', 'offer_id'),
             'status' => fn() => PartnershipStatus::toMultiselectFormat(),
             'candidacies' => fn() => Candidacy::query()
                 ->whereHas('offer', function ($query) {
                     $query->where('company_id', Auth::user()->profile_id);
                 })
                 ->with(['student', 'student.user', 'offer', 'offer.internShip'])
-                ->filter(request()->only('search', 'candidacy_status'))
+                ->filter(request()->only('search', 'candidacy_status', 'offer_id'))
                 ->orderBy(Candidacy::UPDATED_AT)
                 ->paginate(config('custom.records_per_page'))
                 ->withQueryString(),

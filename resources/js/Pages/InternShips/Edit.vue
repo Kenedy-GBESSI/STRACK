@@ -49,7 +49,7 @@
                             <h1
                                 class="font-bold sm:text-2xl text-base leading-8"
                             >
-                                Mettre à jour le stage {{ internShip?.title }}
+                                Mettre à jour la compagne de stage <i>{{ internShip?.title }}</i>
                             </h1>
                         </div>
                     </div>

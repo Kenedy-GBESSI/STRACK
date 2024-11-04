@@ -88,6 +88,11 @@
                             <td
                                 class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
                             >
+                                {{ offer?.intern_ship?.academic_year ?? '-' }}
+                            </td>
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
                                 {{ truncateText(offer?.description) ?? "-" }}
                             </td>
                             <td
@@ -176,13 +181,8 @@
                                             </li>
                                             <li class="w-full p-2">
                                                 <InertiaLink
-                                                    :title="'Créer de nouvelle offre à base de ce stage'"
-                                                    :href="
-                                                        route(
-                                                            `offers.edit`,
-                                                            offer.id,
-                                                        )
-                                                    "
+                                                    :title="'Voir les candidatures liées à cette offre'"
+                                                    :href="`/candidacies?offer_id=${offer.id}`"
                                                     class="text-sm font-semibold text-[#268FF2]"
                                                 >
                                                     <FontAwesomeIcon
@@ -275,6 +275,7 @@ export default {
 
             tableHeader: [
                 "Titre",
+                "Niveau d'étude",
                 "Description",
                 "Exigences",
                 "Responsabilités",

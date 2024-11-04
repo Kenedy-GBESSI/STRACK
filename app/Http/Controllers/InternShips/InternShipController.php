@@ -10,6 +10,7 @@ use App\Traits\InteractsWithAlert;
 use Illuminate\Http\Request;
 use App\Data\File\FileData;
 use App\Enums\AcademicYear;
+use App\Models\StudentInternShip;
 use App\Services\InternShips\InternShipService;
 use Inertia\Inertia;
 
@@ -61,7 +62,7 @@ class InternShipController extends Controller
             $internShipService->saveFile($internShip, FileData::from($fileData));
         });
 
-        $this->alert('Le stage est planifié avec succès !');
+        $this->alert('La campagne de stage est planifiée avec succès !');
 
         return to_route('intern-ships.edit', $internShip);
     }
@@ -106,7 +107,7 @@ class InternShipController extends Controller
             $internShipService->destroyFile($internShip);
         });
 
-        $this->alert('Le stage est modifié avec succès !');
+        $this->alert('La campagne de stage est modifiée avec succès !');
 
         return back();
     }
@@ -118,9 +119,13 @@ class InternShipController extends Controller
      */
     public function destroy(InternShip $internShip)
     {
+        StudentInternShip::query()
+            ->where('intern_ship_id', $internShip->id)
+            ->delete();
+
         $internShip->delete();
 
-        $this->alert('Le stage est supprimé avec succès !');
+        $this->alert('La campagne de stage est supprimée avec succès !');
 
         return back();
     }

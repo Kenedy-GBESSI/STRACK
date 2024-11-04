@@ -71,6 +71,10 @@ class Candidacy extends Model
 
             $query->where('status', $candidacyStatus);
 
+        })->when($filters['offer_id'] ?? null, function ($query, $offerId) {
+
+            $query->where('offer_id', $offerId);
+
         });
     }
 

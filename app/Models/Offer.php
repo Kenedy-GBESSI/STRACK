@@ -78,6 +78,10 @@ class Offer extends Model
                 'requirements',
                 'responsibilities'
             ], $search);
+        })->when($filters['intern_ship_id'] ?? null, function ($query, $internShipId) {
+
+            $query->where('intern_ship_id', $internShipId);
+
         });
     }
 }

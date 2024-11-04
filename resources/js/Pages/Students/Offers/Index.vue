@@ -3,7 +3,7 @@
         <h1 class="font-bold sm:text-2xl text-base leading-8 sm:text-start text-center">
             Les Offres des stages en cours que vous pouvez postuler
         </h1>
-        <div class="my-4">
+        <div  v-if="offers.data.length !== 0" class="my-4">
             <SearchRecordsInput v-model="form.search" class="relative w-full" />
         </div>
 
@@ -76,7 +76,7 @@
             </div>
         </section>
 
-        <div v-if="offers.data.length === 0">Aucune offre trouvée !.</div>
+        <div v-if="offers.data.length === 0" class="mt-4">Aucune offre trouvée !.</div>
 
         <Pagination class="justify-end mb-4" :links="offers.links" />
     </div>

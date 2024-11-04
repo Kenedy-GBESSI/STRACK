@@ -49,7 +49,7 @@
                             <h1
                                 class="font-bold sm:text-2xl text-base leading-8"
                             >
-                                Création de nouveau stage
+                                Planification de nouvelle campagne de stage
                             </h1>
                         </div>
                     </div>

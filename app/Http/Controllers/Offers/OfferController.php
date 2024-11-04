@@ -27,7 +27,7 @@ class OfferController extends Controller
     {
         $query = Offer::query()
             ->with('internShip', 'company')
-            ->filter(request()->only('search'));
+            ->filter(request()->only('search', 'intern_ship_id'));
 
         $offers = Auth::user()->role === 'Institute'
             ? $query
@@ -41,7 +41,7 @@ class OfferController extends Controller
             ->withQueryString();
 
         return Inertia::render('Offers/Index', [
-            'filters' => fn() => $request->all('search'),
+            'filters' => fn() => $request->all('search', 'intern_ship_id'),
             'offers' => fn() => $offers
         ]);
     }

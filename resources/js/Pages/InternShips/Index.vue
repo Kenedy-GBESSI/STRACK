@@ -137,6 +137,20 @@
                                                     >
                                                 </InertiaLink>
                                             </li>
+                                            <li class="w-full p-2">
+                                                <InertiaLink
+                                                    :href="`/offers?intern_ship_id=${internShip.id}`"
+                                                    class="text-sm font-semibold text-[#268FF2]"
+                                                >
+                                                    <FontAwesomeIcon
+                                                        size="fa-lg"
+                                                        class="flex-shrink-0 h-4 w-4 fa-light fa-eye"
+                                                    />
+                                                    <span class="pl-2"
+                                                        >Offres de stages associées</span
+                                                    >
+                                                </InertiaLink>
+                                            </li>
                                             <li
                                                 v-if="
                                                     $page.props.auth.user
@@ -203,7 +217,7 @@
                                                         class="flex-shrink-0 h-4 w-4 fa-light fa-trash-can"
                                                     />
                                                     <span class="pl-2"
-                                                        >Supprimer</span
+                                                        >Fermer cette campagne</span
                                                     >
                                                 </button>
                                             </li>
@@ -335,7 +349,7 @@ export default {
         },
 
         openModal(selectedInternShip) {
-            this.dialogBox.message = `Êtes-vous sûr de vouloir supprimer le stage "${selectedInternShip.title}" ?`;
+            this.dialogBox.message = `Êtes-vous sûr de vouloir fermer cette campagne de stage "${selectedInternShip.title}" ?. Après avoir fermé cette campagne, les étudiants qui font de stage dans cette campagne seront déclarés 'pas en stage'`;
             this.showModal = true;
         },
 
