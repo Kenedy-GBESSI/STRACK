@@ -112,6 +112,15 @@ export default {
         Chart,
     },
 
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            },
+        },
+    },
+
     layout: AppLayout,
     data() {
         return {
@@ -119,19 +128,22 @@ export default {
             chartOptionsPie: {
                 chart: {
                     type: "pie",
-                    custom: {},
+                    custom: {
+                        totalStudents: this.data?.all_interns ?? 0,
+                    },
                     events: {
                         render() {
                             const chart = this,
                                 series = chart.series[0];
                             let customLabel = chart.options.chart.custom.label;
+                            const totalStudents =
+                                chart.options.chart.custom.totalStudents ?? 0;
 
                             if (!customLabel) {
                                 customLabel = chart.options.chart.custom.label =
                                     chart.renderer
                                         .label(
-                                            "Tous les étudiants<br/>" +
-                                                "<strong>2 877 820</strong>",
+                                            `Tous les stagiaires<br/><strong>${totalStudents}</strong>`,
                                         )
                                         .css({
                                             color: "#000",
@@ -203,11 +215,16 @@ export default {
                         data: [
                             {
                                 name: "Fin stage",
-                                y: 50,
+                                y: this.data?.intern_finished_intern_ship,
                             },
                             {
                                 name: "En stage",
-                                y: 25,
+                                y:
+                                    this.data?.all_interns ??
+                                    0 -
+                                        this.data
+                                            ?.intern_finished_intern_ship ??
+                                    0,
                             },
                         ],
                     },
@@ -287,31 +304,31 @@ export default {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#237AE0]",
                     name: "Tous les stagiaires",
-                    value: 3000,
+                    value: this.data?.all_interns ?? 0,
                 },
                 {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#4B9F08]",
                     name: "Stagiaires en fin de stage",
-                    value: 3000,
+                    value: this.data?.intern_finished_intern_ship ?? 0,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#237AE0]",
                     name: "Toutes mes offres",
-                    value: 3000,
+                    value: this.data?.all_offers ?? 0,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#F89500]",
                     name: "Mes offres en cours",
-                    value: 3000,
+                    value: this.data?.active_offers ?? 0,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#D70027]",
                     name: "Mes offres expirées",
-                    value: 3000,
+                    value: this.data?.expired_offers ?? 0,
                 },
             ],
         };

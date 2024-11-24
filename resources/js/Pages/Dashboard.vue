@@ -83,25 +83,37 @@ export default {
     },
 
     layout: AppLayout,
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            },
+        },
+    },
+
     data() {
         return {
             indicator: 0,
+            totalStudents: this.data?.all_students ?? 0,
             chartOptionsPie: {
                 chart: {
                     type: "pie",
-                    custom: {},
+                    custom: {
+                        totalStudents: this.data.all_students,
+                    },
                     events: {
                         render() {
                             const chart = this,
                                 series = chart.series[0];
                             let customLabel = chart.options.chart.custom.label;
+                            const totalStudents = chart.options.chart.custom.totalStudents ?? 0;
 
                             if (!customLabel) {
                                 customLabel = chart.options.chart.custom.label =
                                     chart.renderer
                                         .label(
-                                            "Tous les étudiants<br/>" +
-                                                "<strong>2 877 820</strong>",
+                                            `Tous les étudiants<br/><strong>${totalStudents}</strong>`,
                                         )
                                         .css({
                                             color: "#000",
@@ -173,15 +185,15 @@ export default {
                         data: [
                             {
                                 name: "Sans stage",
-                                y: 25,
+                                y: this.data?.students_not_in_intern_ship ?? 0,
                             },
                             {
                                 name: "Fin stage",
-                                y: 50,
+                                y: this.data?.students_finished_intern_ship ?? 0,
                             },
                             {
                                 name: "En stage",
-                                y: 25,
+                                y: this.data?.students_in_intern_ship ?? 0,
                             },
                         ],
                     },
@@ -261,49 +273,49 @@ export default {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#237AE0]",
                     name: "Tous les étudiants",
-                    value: 3000,
+                    value: this.data?.all_students ?? 0,
                 },
                 {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#F57373]",
                     name: "Étudiants en stage",
-                    value: 3000,
+                    value: this.data?.students_in_intern_ship ?? 0,
                 },
                 {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#F89500]",
                     name: "Étudiants sans stage",
-                    value: 3000,
+                    value: this.data?.students_not_in_intern_ship ?? 0,
                 },
                 {
                     icon: "fa-light fa-users",
                     bgColorStyle: "bg-[#4B9F08]",
                     name: "Etudiants en fin de stage",
-                    value: 3000,
+                    value: this.data?.students_finished_intern_ship ?? 0,
                 },
                 {
                     icon: "fa-light fa-university",
                     bgColorStyle: "bg-[#6733FF]",
                     name: "Les entreprises",
-                    value: 5000,
+                    value: this.data?.all_companies ?? 0,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#237AE0]",
                     name: "Toutes les offres",
-                    value: 3000,
+                    value: this.data?.all_offers ?? 0,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#F89500]",
                     name: "Offres en cours",
-                    value: 3000,
+                    value: this.data?.active_offers ?? 0,
                 },
                 {
                     icon: "fa-light fa-file-zipper",
                     bgColorStyle: "bg-[#D70027]",
                     name: "Offres expirées",
-                    value: 3000,
+                    value: this.data?.expired_offers ?? 0,
                 },
             ],
         };

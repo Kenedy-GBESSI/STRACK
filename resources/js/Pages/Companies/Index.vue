@@ -37,7 +37,7 @@
                     <div
                         class="relative gap-2 px-3 py-1 w-auto border border-[#DADEE3] rounded-md bg-white"
                     >
-                        <label class="text-sm"> Status de stage </label>
+                        <label class="text-sm"> Statut de l'entreprise </label>
                         <br />
                         <div class="flex items-center justify-start w-full">
                             <img

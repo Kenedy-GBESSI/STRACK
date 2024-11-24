@@ -12,6 +12,7 @@ use App\Http\Controllers\Students\DashboardStudentController;
 use App\Http\Controllers\Students\StudentController;
 use App\Http\Controllers\Students\StudentExportController;
 use App\Http\Controllers\Students\StudentInternShipController;
+use App\Services\Statistics\StatisticService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -60,7 +61,9 @@ Route::middleware([
     Route::middleware(['checkProfileType:App\Models\Institute'])->group(function () {
 
         Route::get('dashboard', function () {
-            return Inertia::render('Dashboard');
+            return Inertia::render('Dashboard', [
+                'data' => (new StatisticService)->getInstituteStatistics()
+            ]);
         })->name('institute.dashboard');
 
         // Students
@@ -77,7 +80,9 @@ Route::middleware([
     Route::middleware(['checkProfileType:App\Models\Company'])->group(function () {
 
         Route::get('dashboard/company', function () {
-            return Inertia::render('Companies/Dashboard');
+            return Inertia::render('Companies/Dashboard', [
+                'data' => (new StatisticService)->getCompanyStatistics()
+            ]);
         })->name('company.dashboard');
 
 

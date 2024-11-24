@@ -7,6 +7,7 @@ use App\Enums\StudyField;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Students\StoreStudentRequest;
 use App\Http\Requests\Students\UpdateStudentRequest;
+use App\Models\Candidacy;
 use App\Models\Student;
 use App\Models\StudentInternShip;
 use App\Services\StudentInternShip\StudentInternShipService;
@@ -89,6 +90,13 @@ class StudentController extends Controller
                     'fileData' => $fileData
                 ]
             ]),
+
+            'candidacies' => Candidacy::query()
+                ->where('student_id', $student->id)
+                ->with(['offer', 'offer.company', 'offer.internShip'])
+                ->filter(request()->only('search', 'candidacy_status'))
+                ->orderBy(Candidacy::UPDATED_AT)
+                ->get()
         ]);
     }
 

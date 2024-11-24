@@ -99,28 +99,26 @@
                             >
                                 {{ company?.user?.email }}
                             </p>
-                            <p
-                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
-                            >
-                                Service :
-                            </p>
-                            <p
-                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E] overflow-hidden text-ellipsis whitespace-nowrap"
-                            >
-                                {{ company?.service }}
-                            </p>
                         </li>
                         <li
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
                         >
-                            <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
-                                Description :
-                            </p>
-                            <p
-                                class="font-medium text-base leading-6 sm:w-3/4 w-1/2 text-[#272C2E]"
+                            <div
+                                class="text-base leading-6 w-full flex sm:flex-row flex-col space-x-4"
                             >
-                                {{ company?.description }}
-                            </p>
+                                <p class="font-bold w-1/12">Service :</p>
+                                <p v-html="formattedText(company?.service)"></p>
+                            </div>
+                        </li>
+                        <li
+                            class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                        >
+                            <div
+                                class="text-base leading-6 w-full flex sm:flex-row flex-col space-x-4"
+                            >
+                                <p class="font-bold w-1/12">Description :</p>
+                                <p v-html="formattedText(company?.description)"></p>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -155,7 +153,14 @@ export default {
             deleteString: "",
         };
     },
-    methods: {},
+    methods: {
+        formattedText(text) {
+            if (!text) {
+                return text;
+            }
+            return text.replace(/\n/g, "<br>");
+        },
+    },
 };
 </script>
 

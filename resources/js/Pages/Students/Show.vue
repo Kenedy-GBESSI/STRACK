@@ -162,6 +162,32 @@
                     </p>
                 </li>
                 <li
+                    class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
+                >
+                    <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                        Date de début
+                    </p>
+                    <p
+                        class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                    >
+                        {{
+                            formatDate(student.internShip?.data?.start_date) ??
+                            "-"
+                        }}
+                    </p>
+                    <p class="font-bold text-base leading-6 sm:w-1/4 w-1/2">
+                        Date de fin
+                    </p>
+                    <p
+                        class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]"
+                    >
+                        {{
+                            formatDate(student.internShip?.data?.end_date) ??
+                            "-"
+                        }}
+                    </p>
+                </li>
+                <li
                     v-if="
                         student.internShip?.fileData &&
                         student.internShip?.data?.is_intern_ship_valid === true
@@ -180,22 +206,97 @@
                 </li>
             </ul>
         </div>
-        <div>
+        <div
+            v-if="
+                student.internship_status === 'Pas en stage' &&
+                candidacies.length > 0
+            "
+            class="flex flex-col my-4 bg-[#FFFFFF] p-6"
+        >
+            <h1 class="font-bold text-2xl leading-8">
+                Le(s) offre(s) postulée(s) par l'étudiant
+            </h1>
+            <div class="overflow-x-auto max-h-[60vh] no-scrollbar">
+                <table class="min-w-full table-fixed divide-y divide-gray-300">
+                    <TableHead
+                        :header="tableHeader"
+                        :has-actions="false"
+                        class="sticky top-0 bg-[#FFFFFF] z-40"
+                    />
+                    <tbody class="divide-y divide-gray-200">
+                        <tr
+                            v-for="candidacy in candidacies"
+                            :key="candidacy.id"
+                            class="bg-white even:bg-gray-50"
+                        >
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                {{ candidacy.offer?.title ?? "-" }}
+                            </td>
+
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                {{
+                                    candidacy.offer?.company?.company_name ??
+                                    "-"
+                                }}
+                            </td>
+
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                {{
+                                    candidacy.offer?.company?.phone_number ??
+                                    "-"
+                                }}
+                            </td>
+
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                {{ candidacy.offer?.company?.address ?? "-" }}
+                            </td>
+
+                            <td
+                                class="px-2 py-4 whitespace-nowrap text-sm text-left font-medium"
+                            >
+                                <span
+                                    class="flex justify-center items-center w-[110px] h-8 rounded"
+                                    :class="
+                                        candidacy.status === 'Validé'
+                                            ? 'bg-[#4b9f0814] text-[#4B9F08]'
+                                            : candidacy.status === 'Rejeté'
+                                              ? 'bg-[#f5737314] text-[#F57373]'
+                                              : 'bg-[#f8950014] text-[#F89500]'
+                                    "
+                                >
+                                    {{
+                                        candidacy?.status === "Nouveau"
+                                            ? "En cours ..."
+                                            : candidacy.status ?? "-"
+                                    }}</span
+                                >
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div v-if="student.internship_status !== 'Pas en stage'">
             <div class="my-4 flex justify-start items-center">
-                <PrimaryButton
-                    type="submit"
-                    @click.prevent="openAddNoteModal"
-                >
+                <PrimaryButton type="submit" @click.prevent="openAddNoteModal">
                     Donner une note finale
                 </PrimaryButton>
             </div>
         </div>
         <Teleport to="body">
             <AddNoteForm
-               v-if="showNoteModal"
-               :show="showNoteModal"
-               @close="closeAddNoteModal()"
-               @confirm="confirmAddNoteModal"
+                v-if="showNoteModal"
+                :show="showNoteModal"
+                @close="closeAddNoteModal()"
+                @confirm="confirmAddNoteModal"
             />
         </Teleport>
     </div>
@@ -208,6 +309,8 @@ import FileManager from "@/Shared/FileManager.vue";
 import PrimaryButton from "@/Shared/PrimaryButton.vue";
 import { defineAsyncComponent } from "vue";
 import AddNoteForm from "@/Shared/Forms/AddNoteForm.vue";
+import useDateUtilities from "@/Composables/dateUtilities.js";
+import TableHead from "@/Shared/Tables/TableHead.vue";
 
 const FontAwesomeIcon = defineAsyncComponent({
     loader: () => import("@/Shared/Icons/FontAwesomeIcon.vue"),
@@ -219,34 +322,58 @@ export default {
         FontAwesomeIcon,
         FileManager,
         PrimaryButton,
-        AddNoteForm
+        AddNoteForm,
+        TableHead,
     },
 
     layout: AppLayout,
     props: {
         student: Object,
+        candidacies: {
+            type: Array,
+            default() {
+                return [];
+            },
+        },
+    },
+
+    setup() {
+        const { formatDate } = useDateUtilities();
+
+        return { formatDate };
     },
 
     data() {
         return {
             showNoteModal: false,
+
+            tableHeader: [
+                "Offre",
+                "Entreprise",
+                "Numéro de  l'entreprise",
+                "Addresse de l'entreprise",
+                "Status",
+            ],
         };
     },
     methods: {
-        confirmAddNoteModal(note){
+        confirmAddNoteModal(note) {
             this.closeAddNoteModal();
-            this.$inertia.post(`/final-note-for-student/${this.student.internShip?.data?.id}`, {
-                note: note
-            });
+            this.$inertia.post(
+                `/final-note-for-student/${this.student.internShip?.data?.id}`,
+                {
+                    note: note,
+                },
+            );
         },
 
         openAddNoteModal() {
             this.showNoteModal = true;
         },
 
-        closeAddNoteModal(){
+        closeAddNoteModal() {
             this.showNoteModal = false;
-        }
+        },
     },
 };
 </script>
