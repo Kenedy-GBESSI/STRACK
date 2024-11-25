@@ -99,6 +99,22 @@
                             >
                                 {{ company?.user?.email }}
                             </p>
+
+                            <p
+                                class="font-bold text-base leading-6 sm:w-1/4 w-1/2"
+                            >
+                                Site Web :
+                            </p>
+                            <a
+                                v-if="company?.website"
+                                :href="company?.website"
+                                target="_blank"
+                                class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#28a1d1]"
+                            >
+                                {{ company?.website }}
+                            </a>
+                            <p v-else class="font-medium text-base leading-6 sm:w-1/4 w-1/2 text-[#272C2E]">-</p>
+
                         </li>
                         <li
                             class="bg-white even:bg-[#F6F9FD] w-full flex flex-wrap p-4"
@@ -117,7 +133,9 @@
                                 class="text-base leading-6 w-full flex sm:flex-row flex-col space-x-4"
                             >
                                 <p class="font-bold w-1/12">Description :</p>
-                                <p v-html="formattedText(company?.description)"></p>
+                                <p
+                                    v-html="formattedText(company?.description)"
+                                ></p>
                             </div>
                         </li>
                     </ul>
