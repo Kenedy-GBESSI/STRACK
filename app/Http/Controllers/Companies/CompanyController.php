@@ -30,8 +30,7 @@ class CompanyController extends Controller
                 $join->on('companies.id', '=', 'users.profile_id')
                     ->where('users.profile_type', Company::class);
             })
-            ->orderBy('users.last_name', 'asc')
-            ->orderBy('users.first_name', 'asc')
+            ->orderBy(Company::CREATED_AT, 'desc')
             ->select('companies.*')
             ->paginate(config('custom.records_per_page'))
             ->withQueryString()
